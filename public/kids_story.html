@@ -159,7 +159,12 @@ async function generateStory() {
   storyBox.innerHTML = `<em>🌿 ${beast}正在为你编织一个全新的故事……</em>`;
 
   try {
-    const response = await fetch("http://localhost:3000/api/kids/story", {
+    // 配置 API 基础 URL
+    const API_BASE_URL = "http://localhost:3000";
+    // 生产环境请替换为实际后端域名，例如：
+    // const API_BASE_URL = "https://your-backend-domain.com";
+    
+    const response = await fetch(`${API_BASE_URL}/api/kids/story`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

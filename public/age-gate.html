@@ -185,8 +185,16 @@
 </footer>
 
 <script>
-  // 动画结束后移除 splash 并显示主内容
+  // 页面加载时重置动画状态
   window.addEventListener('load', () => {
+    // 确保 body 没有 loaded 类
+    document.body.classList.remove('loaded');
+    // 重置 splash 屏幕样式
+    const splashScreen = document.getElementById('splash-screen');
+    splashScreen.style.opacity = '1';
+    splashScreen.style.pointerEvents = 'auto';
+    
+    // 延迟后显示主内容
     setTimeout(() => {
       document.body.classList.add('loaded');
     }, 3500); // 与水墨动画时长匹配
@@ -195,6 +203,11 @@
   // 可选：点击 splash 直接跳过动画
   document.getElementById('splash-screen').addEventListener('click', () => {
     document.body.classList.add('loaded');
+  });
+
+  // 页面离开时清除状态，确保返回时动画重新播放
+  window.addEventListener('beforeunload', () => {
+    document.body.classList.remove('loaded');
   });
 </script>
 

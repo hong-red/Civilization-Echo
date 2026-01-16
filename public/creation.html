@@ -172,7 +172,12 @@ async function continuePoem() {
   result.innerHTML = "<em>古人提笔，正在为你续写……</em>";
 
   try {
-    const res = await fetch("http://localhost:3000/api/creation/continue", {
+    // 配置 API 基础 URL
+    const API_BASE_URL = "http://localhost:3000";
+    // 生产环境请替换为实际后端域名，例如：
+    // const API_BASE_URL = "https://your-backend-domain.com";
+    
+    const res = await fetch(`${API_BASE_URL}/api/creation/continue`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstLine, mood })
