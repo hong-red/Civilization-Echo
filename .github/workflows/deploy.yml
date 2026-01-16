@@ -6,27 +6,12 @@ on:
       - main
 
 jobs:
-  # Deploy to GitHub Pages
-  deploy-gh-pages:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: gh-pages
-          force_orphan: true
-          commit_message: 'Deploy to GitHub Pages: ${{ github.sha }}'
-
-  # Notify Railway about the new commit (Railway will auto-deploy from main)
+  # GitHub Pages will deploy directly from main branch's public directory
+  # No separate gh-pages branch needed
   notify-railway:
     runs-on: ubuntu-latest
-    needs: deploy-gh-pages
     steps:
       - uses: actions/checkout@v4
       
       - name: Notify Railway deployment
-        run: echo "Deployment to GitHub Pages completed. Railway will auto-deploy from main branch."
+        run: echo "GitHub Pages will deploy from main branch's public directory. Railway will auto-deploy from main branch."
