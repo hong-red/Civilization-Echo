@@ -19,6 +19,7 @@ Civilization-Echo/
 ├── package.json        # 项目配置
 ├── .env                # 环境变量
 ├── .gitignore          # Git忽略文件
+├── vercel.json         # Vercel配置文件
 └── .github/
     └── workflows/
         └── deploy.yml  # CI/CD部署配置
@@ -40,7 +41,7 @@ Civilization-Echo/
 - **前端**：HTML5 + CSS3 + JavaScript (ES6+)
 - **后端**：Node.js + Express
 - **AI服务**：Moonshot AI API
-- **部署方案**：GitHub Pages + Railway
+- **部署方案**：GitHub Pages + Vercel
 
 ## 部署说明
 
@@ -50,14 +51,20 @@ Civilization-Echo/
 
 访问地址：`https://hong-red.github.io/Civilization-Echo`
 
-### 2. 后端部署 - Railway
+### 2. 后端部署 - Vercel
 
-1. 在Railway上创建新项目
+1. 在Vercel上创建新项目
 2. 关联GitHub仓库 `hong-red/Civilization-Echo`
-3. 设置环境变量：
+3. 配置部署设置：
+   - **Framework Preset**：选择 `Other`
+   - **Build Command**：`npm install`
+   - **Output Directory**：留空
+4. 点击 **Deploy** 开始部署
+5. 部署完成后，在项目设置中添加环境变量：
    - `KIMI_API_KEY`：Moonshot AI API密钥
-   - `PORT`：服务端口（可选，默认3000）
-4. Railway会自动部署并生成域名
+6. Vercel会自动重新部署并生成域名
+
+当前后端地址：`https://civilization-echo.vercel.app`
 
 ### 3. 本地开发
 

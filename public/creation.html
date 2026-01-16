@@ -173,9 +173,9 @@ async function continuePoem() {
 
   try {
     // 配置 API 基础 URL
-    const API_BASE_URL = "http://localhost:3000";
-    // 生产环境请替换为实际后端域名，例如：
-    // const API_BASE_URL = "https://your-backend-domain.com";
+    const API_BASE_URL = "https://civilization-echo.vercel.app";
+    // 本地开发时可切换为：
+    // const API_BASE_URL = "http://localhost:3000";
     
     const res = await fetch(`${API_BASE_URL}/api/creation/continue`, {
       method: "POST",
