@@ -1,5 +1,5 @@
 {
-  "name": "webproject",
+  "name": "civilization-echo",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
@@ -10,7 +10,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "文明回响 - 传统文化互动平台",
+  "homepage": "https://hong-red.github.io/Civilization-Echo",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
