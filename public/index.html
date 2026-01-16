@@ -95,51 +95,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const stage = urlParams.get('stage');
-  const contentDiv = document.getElementById('content');
-  const subtitle = document.getElementById('subtitle');
-
-  if (!stage) {
-    contentDiv.innerHTML = '<div class="error">未检测到旅程阶段，请从入口页重新选择。</div>';
-    subtitle.textContent = "未知旅程";
-    return;
-  }
-
-  let filePath = '';
-  let pageTitle = '';
-
-  switch (stage) {
-    case 'youth':
-      filePath = 'youth-home.html';
-      pageTitle = '时空对话 · 苏轼';
-      break;
-    case 'career':
-      filePath = 'elder-home.html';
-      pageTitle = '记忆诗廊';
-      break;
-    default:
-      contentDiv.innerHTML = '<div class="error">未知的旅程阶段。</div>';
-      subtitle.textContent = "错误";
-      return;
-  }
-
-  subtitle.textContent = pageTitle;
-
-  fetch(filePath)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`无法加载页面：${response.status} ${response.statusText}`);
-      }
-      return response.text();
-    })
-    .then(html => {
-      contentDiv.innerHTML = html;
-    })
-    .catch(err => {
-      console.error('加载失败:', err);
-      contentDiv.innerHTML = `<div class="error">加载失败：<br>${err.message}<br><br>请检查网络或文件是否正确放置。</div>`;
-    });
+  // 重定向到入口页面
+  window.location.href = 'age-gate.html';
 });
 </script>
 
