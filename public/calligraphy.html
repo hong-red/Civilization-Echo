@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>诗画共创 · 文明回响</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Noto Serif SC", "宋体", serif;
+    background: linear-gradient(to bottom, #fdf6e3, #f5e8d0);
+    color: #3e2723;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    text-align: center;
+    padding: 50px 20px 30px;
+    background: rgba(255, 255, 255, 0.7);
+  }
+  header h1 {
+    font-size: 34px;
+    margin: 0 0 12px;
+    color: #5d4037;
+  }
+  header p {
+    font-size: 18px;
+    color: #7d5a4e;
+    margin: 0;
+  }
+  main {
+    flex: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .upload-area {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .upload-box {
+    border: 3px dashed #a1887f;
+    border-radius: 16px;
+    padding: 40px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #fffdf7;
+  }
+  .upload-box:hover {
+    border-color: #8d6e63;
+    background: #fffaf0;
+  }
+  .upload-box.dragover {
+    border-color: #6d4c41;
+    background: #fef9e7;
+    transform: scale(1.02);
+  }
+  input[type="file"] {
+    display: none;
+  }
+  .preview {
+    max-width: 100%;
+    max-height: 400px;
+    margin: 20px 0;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    display: none;
+  }
+  .result {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    text-align: center;
+    display: none;
+  }
+  .matched-poem {
+    font-size: 22px;
+    line-height: 2.2;
+    margin: 20px 0;
+    color: #4e342e;
+    white-space: pre-line;
+  }
+  .poem-author {
+    font-size: 18px;
+    color: #8d6e63;
+    margin: 10px 0;
+  }
+  button {
+    margin: 20px 10px;
+    padding: 14px 32px;
+    font-size: 18px;
+    background: #8d6e63;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  button:hover {
+    background: #6d4c41;
+    transform: translateY(-3px);
+  }
+  .reset-btn {
+    background: #a1887f;
+  }
+  .reset-btn:hover {
+    background: #8d6e63;
+  }
+  .tip {
+    font-size: 15px;
+    color: #a1887f;
+    margin-top: 30px;
+    line-height: 1.7;
+  }
+  .back-btn {
+    margin-top: 40px;
+    padding: 12px 30px;
+    background: #a1887f;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .back-btn:hover {
+    background: #8d6e63;
+    transform: translateY(-2px);
+  }
+  footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 14px;
+    color: #8d6e63;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✒️ 诗画共创</h1>
+  <p>上传你的书法或绘画作品，让千年诗词与你的笔墨相遇</p>
+</header>
+
+<main>
+  <div class="upload-area">
+    <div class="upload-box" id="uploadBox">
+      <p style="font-size:20px; margin:10px 0;">📜 点击或拖拽上传作品</p>
+      <p style="color:#a1887f;">支持 JPG、PNG、WEBP 格式，建议清晰手写真迹</p>
+      <input type="file" id="fileInput" accept="image/*" />
+    </div>
+    <img id="preview" class="preview" alt="作品预览" />
+    <button onclick="document.getElementById('fileInput').click()" style="display:none;" id="reuploadBtn">
+      🔄 重新上传
+    </button>
+  </div>
+
+  <div class="result" id="resultBox">
+    <h2>为你匹配的诗词</h2>
+    <div class="matched-poem" id="poemText"></div>
+    <p class="poem-author" id="poemAuthor"></p>
+    <div>
+      <button onclick="generateAgain()">🔀 再试一次</button>
+      <button class="reset-btn" onclick="resetAll()">🗑️ 重新开始</button>
+    </div>
+  </div>
+
+  <p class="tip">
+    提示：AI 会根据你的笔迹风格、构图、意境等特征，<br>
+    从唐宋名篇中挑选最契合的一首诗词。<br>
+    每一次上传，都可能有不同的心有灵犀。
+  </p>
+</main>
+
+<button class="back-btn" onclick="location.href='age-gate.html'">
+  返回选择入口
+</button>
+
+<footer>
+  文明回响 · 让你的笔墨，唤醒古人的回响
+</footer>
+
+<script>
+// 简单模拟 AI 匹配诗词（真实项目可接入视觉模型 + Kimi，这里用预设库模拟效果）
+const poemDatabase = [
+  { text: "竹外桃花三两枝，春江水暖鸭先知。\n蒌蒿满地芦芽短，正是河豚欲上时。", author: "苏轼 · 《惠崇春江晚景》" },
+  { text: "回首向来萧瑟处，归去，也无风雨也无晴。", author: "苏轼 · 《定风波》" },
+  { text: "大江东去，浪淘尽，千古风流人物。", author: "苏轼 · 《念奴娇·赤壁怀古》" },
+  { text: "明月几时有？把酒问青天。\n不知天上宫阙，今夕是何年。", author: "苏轼 · 《水调歌头》" },
+  { text: "床前明月光，疑是地上霜。\n举头望明月，低头思故乡。", author: "李白 · 《静夜思》" },
+  { text: "海内存知己，天涯若比邻。", author: "王勃 · 《送杜少府之任蜀州》" },
+  { text: "野径云俱黑，江船火独明。\n晓看红湿处，花重锦官城。", author: "杜甫 · 《春夜喜雨》" },
+  { text: "停车坐爱枫林晚，霜叶红于二月花。", author: "杜甫 · 《山行》" },
+  { text: "独在异乡为异客，每逢佳节倍思亲。\n遥知兄弟登高处，遍插茱萸少一人。", author: "王维 · 《九月九日忆山东兄弟》" }
+];
+
+let currentImage = null;
+
+const uploadBox = document.getElementById('uploadBox');
+const fileInput = document.getElementById('fileInput');
+const preview = document.getElementById('preview');
+const resultBox = document.getElementById('resultBox');
+const poemText = document.getElementById('poemText');
+const poemAuthor = document.getElementById('poemAuthor');
+const reuploadBtn = document.getElementById('reuploadBtn');
+
+uploadBox.addEventListener('click', () => fileInput.click());
+
+uploadBox.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadBox.classList.add('dragover');
+});
+
+uploadBox.addEventListener('dragleave', () => {
+  uploadBox.classList.remove('dragover');
+});
+
+uploadBox.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadBox.classList.remove('dragover');
+  if (e.dataTransfer.files.length) {
+    handleFile(e.dataTransfer.files[0]);
+  }
+});
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length) {
+    handleFile(fileInput.files[0]);
+  }
+});
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) {
+    alert('请上传图片文件哦～');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    uploadBox.style.display = 'none';
+    reuploadBtn.style.display = 'inline-block';
+    currentImage = e.target.result;
+
+    // 模拟 AI 分析并匹配诗词
+    setTimeout(() => {
+      matchPoem();
+    }, 1500);
+  };
+  reader.readAsDataURL(file);
+}
+
+function matchPoem() {
+  const randomPoem = poemDatabase[Math.floor(Math.random() * poemDatabase.length)];
+  poemText.textContent = randomPoem.text;
+  poemAuthor.textContent = randomPoem.author;
+  resultBox.style.display = 'block';
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+}
+
+function generateAgain() {
+  resultBox.style.opacity = '0.6';
+  setTimeout(() => {
+    matchPoem();
+    resultBox.style.opacity = '1';
+  }, 800);
+}
+
+function resetAll() {
+  preview.src = '';
+  preview.style.display = 'none';
+  uploadBox.style.display = 'block';
+  reuploadBtn.style.display = 'none';
+  resultBox.style.display = 'none';
+  fileInput.value = '';
+}
+</script>
+
+</body>
+</html>

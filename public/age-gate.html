@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>文明回响 · 时空诗旅</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+    background: linear-gradient(to bottom, #f8f5f0, #e8e2d8);
+    color: #333;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 水墨开场动画 */
+  #splash-screen {
+    position: fixed;
+    inset: 0;
+    background: #fffef7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 1.5s ease-out;
+  }
+  .ink-splash {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(50,50,50,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: inkSpread 3s ease-out forwards;
+    position: relative;
+  }
+  .ink-splash::after {
+    content: '';
+    position: absolute;
+    inset: 20%;
+    background: radial-gradient(circle, rgba(30,30,30,0.2) 0%, transparent 60%);
+    border-radius: 50%;
+    animation: inkSpread 3s 0.5s ease-out forwards;
+  }
+  @keyframes inkSpread {
+    0% { transform: scale(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: scale(4); opacity: 0; }
+  }
+  .splash-text {
+    margin-top: 40px;
+    font-size: 36px;
+    color: #444;
+    letter-spacing: 8px;
+    opacity: 0;
+    animation: fadeIn 2s 1s forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* 主内容 */
+  header {
+    text-align: center;
+    padding: 80px 20px 40px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s ease-out 1s;
+  }
+  header h1 {
+    font-size: 40px;
+    margin-bottom: 16px;
+    color: #3e2723;
+  }
+  header p {
+    font-size: 18px;
+    color: #6d4c41;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1.4s ease-out 1.3s;
+  }
+  .card {
+    background: rgba(255,255,255,0.85);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(10px);
+  }
+  .card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  .card h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #5d4037;
+  }
+  .card p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #6d4c41;
+    margin-bottom: 24px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 8px 20px;
+    background: #d7ccc8;
+    color: #5d4037;
+    border-radius: 30px;
+    font-size: 14px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 14px;
+    color: #8d6e63;
+    background: rgba(255,255,255,0.6);
+  }
+
+  /* 动画完成后的状态 */
+  body.loaded #splash-screen {
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.loaded header,
+  body.loaded main {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- 开场水墨动画 -->
+<div id="splash-screen">
+  <div class="ink-splash"></div>
+  <div class="splash-text">文明回响 · 时空诗旅</div>
+</div>
+
+<header>
+  <h1>文明回响 · 时空诗旅</h1>
+  <p>请选择你的旅程入口，与千年前的思想相遇</p>
+</header>
+
+<main>
+  <div class="card" onclick="location.href='kid.html'">
+    <h2>🌱 童趣诗词园</h2>
+    <p>和神兽一起认识诗人，用故事、动画与节气，感受诗词的温度。</p>
+    <span class="tag">3–12 岁</span>
+  </div>
+
+  <div class="card" onclick="location.href='dialogue.html'">
+    <h2>📜 时空对话 · 苏轼</h2>
+    <p>与真实人格构建的苏轼对话，解构诗词，理解情绪，进入诗人的精神世界。</p>
+    <span class="tag">13–35 岁 · 核心体验</span>
+  </div>
+
+  <div class="card" onclick="location.href='elder-home.html'">
+    <h2>🕯 记忆诗廊</h2>
+    <p>按年代重温熟悉的诗句，在回忆中与文化相伴，安静而从容。</p>
+    <span class="tag">35+ 岁</span>
+  </div>
+</main>
+
+<footer>
+  文明回响 · 一个让文明重新与人对话的数字入口
+</footer>
+
+<script>
+  // 动画结束后移除 splash 并显示主内容
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.body.classList.add('loaded');
+    }, 3500); // 与水墨动画时长匹配
+  });
+
+  // 可选：点击 splash 直接跳过动画
+  document.getElementById('splash-screen').addEventListener('click', () => {
+    document.body.classList.add('loaded');
+  });
+</script>
+
+</body>
+</html>

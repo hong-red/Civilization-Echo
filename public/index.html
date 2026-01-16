@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>文明回响 · 时空诗旅</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Noto Serif SC", "宋体", serif;
+    background: linear-gradient(to bottom, #111, #2b2b2b);
+    color: #f2f2f2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    background: #000;
+  }
+  header h1 {
+    font-size: 32px;
+    margin: 0 0 10px;
+  }
+  header p {
+    font-size: 16px;
+    color: #aaa;
+    margin: 0;
+  }
+  #content {
+    flex: 1;
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    min-height: 600px;
+    backdrop-filter: blur(10px);
+  }
+  .loading {
+    text-align: center;
+    font-size: 18px;
+    color: #ccc;
+    padding: 100px 20px;
+  }
+  .error {
+    text-align: center;
+    color: #e74c3c;
+    font-size: 18px;
+    padding: 100px 20px;
+  }
+  footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 13px;
+    color: #777;
+  }
+  .back-btn {
+    display: block;
+    width: fit-content;
+    margin: 30px auto 0;
+    padding: 12px 28px;
+    background: #34495e;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .back-btn:hover {
+    background: #4a6a8a;
+    transform: scale(1.05);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>文明回响 · 时空诗旅</h1>
+  <p id="subtitle">加载中……</p>
+</header>
+
+<div id="content">
+  <div class="loading">正在打开时空之门……</div>
+</div>
+
+
+
+<footer>
+  文明回响 · 一个让文明重新与人对话的数字入口
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const stage = urlParams.get('stage');
+  const contentDiv = document.getElementById('content');
+  const subtitle = document.getElementById('subtitle');
+
+  if (!stage) {
+    contentDiv.innerHTML = '<div class="error">未检测到旅程阶段，请从入口页重新选择。</div>';
+    subtitle.textContent = "未知旅程";
+    return;
+  }
+
+  let filePath = '';
+  let pageTitle = '';
+
+  switch (stage) {
+    case 'youth':
+      filePath = 'youth-home.html';
+      pageTitle = '时空对话 · 苏轼';
+      break;
+    case 'career':
+      filePath = 'elder-home.html';
+      pageTitle = '记忆诗廊';
+      break;
+    default:
+      contentDiv.innerHTML = '<div class="error">未知的旅程阶段。</div>';
+      subtitle.textContent = "错误";
+      return;
+  }
+
+  subtitle.textContent = pageTitle;
+
+  fetch(filePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`无法加载页面：${response.status} ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(html => {
+      contentDiv.innerHTML = html;
+    })
+    .catch(err => {
+      console.error('加载失败:', err);
+      contentDiv.innerHTML = `<div class="error">加载失败：<br>${err.message}<br><br>请检查网络或文件是否正确放置。</div>`;
+    });
+});
+</script>
+
+</body>
+</html>

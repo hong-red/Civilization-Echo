@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>时空对话 · 苏轼 - 文明回响</title>
+  <!-- 引入 Chart.js 用于诗词可视化 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", "宋体", serif;
+      background: #f6f4f1;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 30px 20px;
+      background: #2c2c2c;
+      color: #fff;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+    header p {
+      margin: 0;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      padding: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 22px;
+      border-left: 5px solid #e74c3c;
+      padding-left: 12px;
+      color: #333;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 16px;
+      padding: 12px;
+      font-size: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    textarea::placeholder {
+      color: #999;
+    }
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      background: #2c2c2c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    button:hover {
+      background: #444;
+    }
+    .answer {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8f8f8;
+      border-radius: 8px;
+      font-size: 16px;
+      line-height: 1.8;
+      min-height: 80px;
+      border-left: 4px solid #e74c3c;
+    }
+    .answer em {
+      color: #888;
+    }
+    .tag {
+      display: inline-block;
+      margin: 8px 4px 0 0;
+      padding: 4px 10px;
+      background: #eee;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #555;
+    }
+    .poem {
+      white-space: pre-line;
+      font-size: 17px;
+      line-height: 2.1;
+      background: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #444;
+      border: 1px solid #eee;
+    }
+    canvas {
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    .back-btn {
+      display: inline-block;
+      width: fit-content;
+      margin: 0 10px;
+      padding: 12px 30px;
+      background: #95a5a6;
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    .back-btn:hover {
+      background: #7f8c8d;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #777;
+      background: #eee;
+    }
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>文明回响 · 时空诗旅</h1>
+  <p>与苏轼对话 · 诗词解构实验室</p>
+</header>
+
+<main>
+  <!-- 左侧：时空对话机 -->
+  <section>
+    <h2>时空对话机 · 苏轼</h2>
+    <textarea id="question" placeholder="例如：东坡先生，被贬黄州时真的豁达吗？&#10;或者：您如何看待人生无常？&#10;也可以问美食、功名、现代生活……"></textarea>
+    <button onclick="askSuShi()">发送问题</button>
+
+    <div class="answer" id="answerBox">
+      <em>东坡在月下独酌，等你来问……</em>
+    </div>
+  </section>
+
+  <!-- 右侧：诗词解构实验室 -->
+  <section>
+    <h2>诗词解构 · 《定风波·莫听穿林打叶声》</h2>
+    
+    <div class="poem">
+莫听穿林打叶声，何妨吟啸且徐行。  
+竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。  
+
+料峭春风吹酒醒，微冷，山头斜照却相迎。  
+回首向来萧瑟处，归去，也无风雨也无晴。
+    </div>
+
+    <canvas id="emotionChart"></canvas>
+    <p style="text-align:center; margin-top:10px;">
+      <strong>情绪曲线：</strong>低谷 → 豁达 → 释然
+    </p>
+
+    <canvas id="wordChart"></canvas>
+    <p style="text-align:center; margin-top:10px;">
+      <strong>高频意象：</strong>雨 · 风 · 行 · 山 · 酒 · 冷
+    </p>
+  </section>
+</main>
+
+<div style="text-align: center; margin: 30px 0;">
+  <a href="youth-home.html" class="back-btn">返回青年主页</a>
+  <a href="creation.html" class="back-btn">前往诗词混创工坊</a>
+</div>
+
+<footer>
+  文明回响 · 与千年前的思想相遇
+</footer>
+
+<script>
+// 与苏轼对话
+async function askSuShi() {
+  const question = document.getElementById("question").value.trim();
+  const box = document.getElementById("answerBox");
+
+  if (!question) {
+    box.innerHTML = "<em>请先写下你的问题。</em>";
+    return;
+  }
+
+  box.innerHTML = "<em>苏轼正在提笔为你回信……</em>";
+  document.getElementById("question").value = "";
+
+  try {
+    const res = await fetch("http://localhost:3000/api/sushi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question })
+    });
+
+    const data = await res.json();
+    const answer = data.answer || "风雨太大，东坡暂未回应。";
+
+    box.innerHTML = `
+      <p>${answer.replace(/\n/g, "<br>")}</p>
+      <span class="tag">苏轼 · 北宋</span>
+      <span class="tag">AI 时空回应</span>
+    `;
+  } catch (err) {
+    box.innerHTML = "<em>江上雾起，书信暂未送到……请稍后再试。</em>";
+  }
+}
+
+// 支持 Enter 发送（Shift+Enter 换行）
+document.getElementById("question").addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    askSuShi();
+  }
+});
+
+// 情绪曲线图
+new Chart(document.getElementById("emotionChart"), {
+  type: 'line',
+  data: {
+    labels: ['风雨突至', '吟啸徐行', '一蓑烟雨', '春风吹醒', '斜照相迎', '回首萧瑟', '也无风雨也无晴'],
+    datasets: [{
+      label: '情绪值',
+      data: [30, 50, 70, 45, 60, 50, 90],
+      borderColor: '#e74c3c',
+      backgroundColor: 'rgba(231, 76, 60, 0.1)',
+      tension: 0.4,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, max: 100, ticks: { display: false } },
+      x: { ticks: { font: { size: 13 } } }
+    }
+  }
+});
+
+// 意象词雷达图（模拟词频）
+new Chart(document.getElementById("wordChart"), {
+  type: 'radar',
+  data: {
+    labels: ['雨', '风', '行', '山', '酒', '冷', '晴', '马'],
+    datasets: [{
+      label: '意象出现强度',
+      data: [8, 7, 6, 5, 4, 3, 2, 2],
+      backgroundColor: 'rgba(52, 152, 219, 0.2)',
+      borderColor: '#3498db',
+      pointBackgroundColor: '#3498db'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        beginAtZero: true,
+        max: 10,
+        ticks: { stepSize: 2 }
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>

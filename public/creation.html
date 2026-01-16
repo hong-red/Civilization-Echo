@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>诗词混创工坊 · 文明回响</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Noto Serif SC", "宋体", serif;
+    background: linear-gradient(to bottom, #0a0e17, #1a2332);
+    color: #e8e6e3;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+  .container {
+    width: 90%;
+    max-width: 900px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+  }
+  h1 {
+    text-align: center;
+    font-size: 36px;
+    color: #f1c40f;
+    margin-bottom: 20px;
+  }
+  p {
+    text-align: center;
+    font-size: 18px;
+    color: #bdc3c7;
+    margin-bottom: 40px;
+  }
+  .input-area {
+    background: rgba(0,0,0,0.3);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+  }
+  textarea {
+    width: 100%;
+    height: 100px;
+    padding: 16px;
+    font-size: 20px;
+    background: transparent;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 12px;
+    resize: none;
+    font-family: inherit;
+  }
+  textarea::placeholder {
+    color: #888;
+  }
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  select {
+    padding: 12px 20px;
+    font-size: 16px;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+  }
+  button {
+    padding: 14px 36px;
+    font-size: 18px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+  }
+  .poem-result {
+    background: rgba(0,0,0,0.4);
+    border-radius: 16px;
+    padding: 30px;
+    font-size: 24px;
+    line-height: 2.4;
+    white-space: pre-line;
+    min-height: 150px;
+    text-align: center;
+  }
+  .user-line {
+    color: #f1c40f;
+    font-weight: bold;
+  }
+  .ai-line {
+    color: #87CEEB;
+  }
+  .tip {
+    text-align: center;
+    font-size: 15px;
+    color: #95a5a6;
+    margin-top: 40px;
+    line-height: 1.7;
+  }
+  .back-btn {
+    margin-top: 40px;
+    padding: 12px 30px;
+    background: #34495e;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🖋️ 诗词混创工坊</h1>
+  <p>你起一句，我续三句<br>我们一起，与古人合写新诗</p>
+
+  <div class="input-area">
+    <textarea id="firstLine" placeholder="例如：我在城市的夜里，想起远方的山……"></textarea>
+    
+    <div class="controls">
+      <select id="mood">
+        <option value="自由">自由挥洒</option>
+        <option value="孤独">淡淡孤独</option>
+        <option value="漂泊">漂泊苍凉</option>
+        <option value="喜悦">明快喜悦</option>
+        <option value="思念">柔软相思</option>
+      </select>
+      <button onclick="continuePoem()">AI 续写</button>
+    </div>
+  </div>
+
+  <div class="poem-result" id="result">
+    <em>等待你的开头……</em>
+  </div>
+
+  <div class="actions" style="text-align: center; margin-top: 20px;">
+    <button id="generate-letter-btn" style="display:none;" onclick="generateLetter()">📜 生成手抄诗笺</button>
+  </div>
+
+  <p class="tip">
+    ⚠️ AI 只辅助续写，不代写全诗<br>
+    最终作品属于你，可保存、分享、投稿
+  </p>
+
+  <button class="back-btn" onclick="location.href='age-gate.html'">
+    返回选择入口
+  </button>
+</div>
+
+<script>
+async function continuePoem() {
+  const firstLine = document.getElementById("firstLine").value.trim();
+  const mood = document.getElementById("mood").value;
+  const result = document.getElementById("result");
+
+  if (!firstLine) {
+    result.innerHTML = "<em>请先写下你的开头哦～</em>";
+    return;
+  }
+
+  result.innerHTML = "<em>古人提笔，正在为你续写……</em>";
+
+  try {
+    const res = await fetch("http://localhost:3000/api/creation/continue", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstLine, mood })
+    });
+
+    const data = await res.json();
+    const continuation = data.continuation || "云深不知处，松风自吹寒。一叶梦相关。";
+
+    result.innerHTML = `
+      <span class="user-line">你：${firstLine}</span><br><br>
+      <span class="ai-line">古人续：</span><br>
+      ${continuation}
+    `;
+
+    // 显示生成手抄诗笺按钮
+    const generateBtn = document.getElementById("generate-letter-btn");
+    generateBtn.style.display = "inline-block";
+    window.currentPoem = {
+      title: firstLine.substring(0, 10) + '...',
+      text: firstLine + '\n' + continuation,
+      author: '你与古人'
+    };
+
+  } catch (err) {
+    result.innerHTML = "<em>墨汁晕开了，古人暂未落笔…请重试</em>";
+  }
+}
+
+function generateLetter() {
+  if (window.currentPoem) {
+    sessionStorage.setItem('currentPoem', JSON.stringify(window.currentPoem));
+    window.location.href = 'poem-letter.html';
+  }
+}
+</script>
+
+</body>
+</html>
