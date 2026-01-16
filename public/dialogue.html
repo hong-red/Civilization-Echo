@@ -5,7 +5,10 @@
   <title>时空对话 · 苏轼 - 文明回响</title>
   <!-- 引入 Chart.js 用于诗词可视化 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- 引入思源宋体，确保中文排版优雅 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* 全局基础样式 */
     body {
       margin: 0;
       font-family: "Noto Serif SC", "宋体", serif;
@@ -15,6 +18,7 @@
       display: flex;
       flex-direction: column;
     }
+    /* 头部样式 */
     header {
       padding: 30px 20px;
       background: #2c2c2c;
@@ -30,6 +34,7 @@
       font-size: 16px;
       opacity: 0.9;
     }
+    /* 主体布局：左右两栏 */
     main {
       flex: 1;
       display: grid;
@@ -39,6 +44,7 @@
       max-width: 1400px;
       margin: 0 auto;
     }
+    /* 卡片区域 */
     section {
       background: #fff;
       border-radius: 12px;
@@ -52,6 +58,7 @@
       padding-left: 12px;
       color: #333;
     }
+    /* 输入框 */
     textarea {
       width: 100%;
       height: 100px;
@@ -66,6 +73,7 @@
     textarea::placeholder {
       color: #999;
     }
+    /* 按钮 */
     button {
       margin-top: 12px;
       padding: 10px 20px;
@@ -79,6 +87,7 @@
     button:hover {
       background: #444;
     }
+    /* 回答区域 */
     .answer {
       margin-top: 16px;
       padding: 16px;
@@ -92,6 +101,7 @@
     .answer em {
       color: #888;
     }
+    /* 标签 */
     .tag {
       display: inline-block;
       margin: 8px 4px 0 0;
@@ -101,6 +111,7 @@
       font-size: 13px;
       color: #555;
     }
+    /* 诗词展示 */
     .poem {
       white-space: pre-line;
       font-size: 17px;
@@ -113,10 +124,12 @@
       color: #444;
       border: 1px solid #eee;
     }
+    /* 图表画布 */
     canvas {
       margin: 20px 0;
       border-radius: 8px;
     }
+    /* 返回按钮 */
     .back-btn {
       display: inline-block;
       width: fit-content;
@@ -131,6 +144,7 @@
     .back-btn:hover {
       background: #7f8c8d;
     }
+    /* 页脚 */
     footer {
       text-align: center;
       padding: 20px;
@@ -138,6 +152,7 @@
       color: #777;
       background: #eee;
     }
+    /* 移动端适配 */
     @media (max-width: 900px) {
       main { grid-template-columns: 1fr; }
     }
@@ -210,11 +225,15 @@ async function askSuShi() {
   document.getElementById("question").value = "";
 
   try {
-    const res = await fetch("https://civilization-echo-production.up.railway.app/api/sushi", {
+    const res = await fetch("http://localhost:3000/api/sushi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question })
     });
+
+    if (!res.ok) {
+      throw new Error("网络响应失败：" + res.status);
+    }
 
     const data = await res.json();
     const answer = data.answer || "风雨太大，东坡暂未回应。";
@@ -225,6 +244,7 @@ async function askSuShi() {
       <span class="tag">AI 时空回应</span>
     `;
   } catch (err) {
+    console.error("对话接口异常：", err);
     box.innerHTML = "<em>江上雾起，书信暂未送到……请稍后再试。</em>";
   }
 }
@@ -237,53 +257,62 @@ document.getElementById("question").addEventListener("keydown", function(e) {
   }
 });
 
-// 情绪曲线图
-new Chart(document.getElementById("emotionChart"), {
-  type: 'line',
-  data: {
-    labels: ['风雨突至', '吟啸徐行', '一蓑烟雨', '春风吹醒', '斜照相迎', '回首萧瑟', '也无风雨也无晴'],
-    datasets: [{
-      label: '情绪值',
-      data: [30, 50, 70, 45, 60, 50, 90],
-      borderColor: '#e74c3c',
-      backgroundColor: 'rgba(231, 76, 60, 0.1)',
-      tension: 0.4,
-      fill: true
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { beginAtZero: true, max: 100, ticks: { display: false } },
-      x: { ticks: { font: { size: 13 } } }
-    }
-  }
-});
-
-// 意象词雷达图（模拟词频）
-new Chart(document.getElementById("wordChart"), {
-  type: 'radar',
-  data: {
-    labels: ['雨', '风', '行', '山', '酒', '冷', '晴', '马'],
-    datasets: [{
-      label: '意象出现强度',
-      data: [8, 7, 6, 5, 4, 3, 2, 2],
-      backgroundColor: 'rgba(52, 152, 219, 0.2)',
-      borderColor: '#3498db',
-      pointBackgroundColor: '#3498db'
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: {
-      r: {
-        beginAtZero: true,
-        max: 10,
-        ticks: { stepSize: 2 }
+// 等待 DOM 加载完成后再初始化图表
+window.addEventListener("DOMContentLoaded", () => {
+  // 情绪曲线图
+  const emotionCtx = document.getElementById("emotionChart");
+  if (emotionCtx) {
+    new Chart(emotionCtx, {
+      type: 'line',
+      data: {
+        labels: ['风雨突至', '吟啸徐行', '一蓑烟雨', '春风吹醒', '斜照相迎', '回首萧瑟', '也无风雨也无晴'],
+        datasets: [{
+          label: '情绪值',
+          data: [30, 50, 70, 45, 60, 50, 90],
+          borderColor: '#e74c3c',
+          backgroundColor: 'rgba(231, 76, 60, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, max: 100, ticks: { display: false } },
+          x: { ticks: { font: { size: 13 } } }
+        }
       }
-    }
+    });
+  }
+
+  // 意象词雷达图（模拟词频）
+  const wordCtx = document.getElementById("wordChart");
+  if (wordCtx) {
+    new Chart(wordCtx, {
+      type: 'radar',
+      data: {
+        labels: ['雨', '风', '行', '山', '酒', '冷', '晴', '马'],
+        datasets: [{
+          label: '意象出现强度',
+          data: [8, 7, 6, 5, 4, 3, 2, 2],
+          backgroundColor: 'rgba(52, 152, 219, 0.2)',
+          borderColor: '#3498db',
+          pointBackgroundColor: '#3498db'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 10,
+            ticks: { stepSize: 2 }
+          }
+        }
+      }
+    });
   }
 });
 </script>

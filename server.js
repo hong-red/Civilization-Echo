@@ -13,7 +13,7 @@ app.use(express.json());
 
 /* ===== 再 CORS（一定在路由前）===== */
 app.use(cors({
-  origin: ["http://127.0.0.1:3000", "http://localhost:3000", "https://hong-red.github.io"],
+  origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"]
 }));
