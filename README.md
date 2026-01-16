@@ -131,7 +131,7 @@ PORT=3000
 1. 前端开发：修改 `public/` 目录下的文件
 2. 后端开发：修改 `server.js`
 3. 推送代码到 `main` 分支，GitHub Actions自动部署前端到GitHub Pages
-4. Railway自动部署后端服务
+4. Vercel自动部署后端服务
 
 ## 贡献
 
