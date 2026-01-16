@@ -13,6 +13,7 @@
   "description": "文明回响 - 传统文化互动平台",
   "homepage": "https://hong-red.github.io/Civilization-Echo",
   "dependencies": {
+    "express": "^4.18.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "node-fetch": "^3.3.2"

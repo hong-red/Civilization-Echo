@@ -210,7 +210,7 @@ async function askSuShi() {
   document.getElementById("question").value = "";
 
   try {
-    const res = await fetch("http://localhost:3000/api/sushi", {
+    const res = await fetch("https://civilization-echo-production.up.railway.app/api/sushi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question })
