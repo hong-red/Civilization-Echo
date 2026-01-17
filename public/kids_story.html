@@ -212,7 +212,11 @@ async function generateStory() {
   document.getElementById("poemText").innerText = text;
 
   const storyBox = document.getElementById("storyBox");
-  storyBox.innerHTML = `<em>🌿 ${beast}正在为你编织一个全新的故事……</em>`;
+  storyBox.innerHTML = `<em>🌿 ${beast}正在为你编织故事...<br>(AI 创作中，大约需要 10 秒)</em>`;
+
+  // 自动超时处理
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15秒前端超时
 
   try {
     // 智能 API 基础 URL：本地用 localhost，线上用 Vercel
@@ -228,11 +232,16 @@ async function generateStory() {
         poemTitle: title,
         poet: poet,
         poemText: text
-      })
+      }),
+      signal: controller.signal
     });
 
+    clearTimeout(timeoutId);
+
+    if (!response.ok) throw new Error("API 请求失败");
+
     const data = await response.json();
-    currentStory = data.story || "神兽今天有点害羞，明天再来听故事吧～";
+    currentStory = data.story || "神兽走进云雾里了，一会儿再来吧。";
 
     storyBox.innerHTML = currentStory.replace(/\n/g, "<br>");
 
@@ -243,8 +252,14 @@ async function generateStory() {
     utterance.pitch = 1.1;
 
   } catch (err) {
+    clearTimeout(timeoutId);
     console.error(err);
-    storyBox.innerHTML = `<em>🌫 云雾太重，${beast}的声音暂时传不过来…<br>请检查网络后刷新页面～</em>`;
+    storyBox.innerHTML = `
+      <em>🌫 云雾太重，${beast}的声音暂时传不过来...</em><br>
+      <button onclick="generateStory()" style="margin-top:15px; padding:8px 20px; background:#e67e22; color:white; border:none; border-radius:20px; cursor:pointer;">
+        再请神兽讲一遍
+      </button>
+    `;
   }
 }
 

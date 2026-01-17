@@ -50,26 +50,40 @@ app.get("/api/health", (req, res) => {
 async function callKimi(messages, temperature = 0.8) {
   if (!KIMI_API_KEY) throw new Error("缺少 KIMI_API_KEY");
   
-  // Node 20+ 原生支持 fetch
-  const response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${KIMI_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: "moonshot-v1-8k",
-      messages,
-      temperature
-    })
-  });
-  
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`API 返回错误: ${response.status} ${errorText}`);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8500); // 8.5秒超时，留给Vercel一点缓冲
+
+  try {
+    // Node 20+ 原生支持 fetch
+    const response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${KIMI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "moonshot-v1-8k",
+        messages,
+        temperature
+      }),
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`API 返回错误: ${response.status} ${errorText}`);
+    }
+    
+    return await response.json();
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      throw new Error("AI 响应超时，请稍后再试");
+    }
+    throw err;
   }
-  
-  return await response.json();
 }
 
 app.post("/api/kids/story", async (req, res) => {
