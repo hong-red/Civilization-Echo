@@ -3,13 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- 引入思源宋体，使用国内镜像加速 -->
-<link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
 <title>电子手抄诗笺 · 文明回响</title>
 <script src="https://lib.baomitu.com/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-  body {
+  * {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+  }
+  body {
     background: #f9f5f0;
     min-height: 100vh;
     display: flex;

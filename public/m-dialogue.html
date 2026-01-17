@@ -11,6 +11,7 @@
       background: #fdfcf8;
       color: #333;
       padding-bottom: 40px;
+      touch-action: manipulation;
     }
     header {
       background: #3e2723;
@@ -43,12 +44,14 @@
     
     button {
       width: 100%;
-      padding: 14px;
-      background: #3e2723;
+      padding: 16px;
+      background: #8d6e63;
       color: #fff;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(141, 110, 99, 0.2);
     }
     
     .answer {
@@ -121,8 +124,8 @@
   </div>
 
   <div class="nav-btns">
-    <a href="youth-home.html">返回主页</a>
-    <a href="creation.html">诗词混创</a>
+    <a href="index.html">返回入口</a>
+    <a href="m-creation.html">诗词混创</a>
   </div>
 </main>
 
@@ -132,25 +135,30 @@ async function askSuShi() {
   const box = document.getElementById("answerBox");
   if (!question) return;
 
-  box.innerHTML = "<em style='color:#999'>苏轼正在提笔为你回信……</em>";
-  
-  try {
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
+  const btn = document.querySelector('button');
+    btn.disabled = true;
+    btn.innerText = "正在回信...";
+    box.innerHTML = "<em style='color:#999'>苏轼正在提笔为你回信……</em>";
     
-    const res = await fetch(`${API_BASE_URL}/api/sushi`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question })
-    });
-    
-    const data = await res.json();
-    box.innerHTML = `<p>${(data.answer || "风雨太大，暂未收到回信").replace(/\n/g, "<br>")}</p>`;
-    document.getElementById("question").value = "";
-  } catch (err) {
-    box.innerHTML = "<em style='color:#999'>江上雾起，请稍后再试。</em>";
-  }
+    try {
+      // 使用相对路径，自动适配环境
+      const API_URL = "/api/sushi";
+      
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question })
+      });
+      
+      const data = await res.json();
+      box.innerHTML = `<p>${(data.answer || "风雨太大，暂未收到回信").replace(/\n/g, "<br>")}</p>`;
+      document.getElementById("question").value = "";
+    } catch (err) {
+      box.innerHTML = "<em style='color:#999'>江上雾起，请稍后再试。</em>";
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "发送问题";
+    }
 }
 </script>
 

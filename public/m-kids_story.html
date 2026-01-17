@@ -12,6 +12,7 @@
       background: #fff;
       color: #333;
       padding: 10px;
+      touch-action: manipulation;
     }
     header { text-align: center; margin-bottom: 15px; }
     header h1 { font-size: 18px; color: #444; margin: 0; }
@@ -101,14 +102,16 @@ async function generateStory() {
   document.getElementById("poemText").innerText = text;
 
   const storyBox = document.getElementById("storyBox");
+  const reloadBtn = document.querySelector('button[onclick="reloadStory()"]');
+  if (reloadBtn) reloadBtn.disabled = true;
+  
   storyBox.innerHTML = `<em>🌿 ${beast}正在编织故事...</em>`;
 
   try {
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
+    // 使用相对路径，自动适配环境
+    const API_URL = "/api/kids/story";
     
-    const res = await fetch(`${API_BASE_URL}/api/kids/story`, {
+    const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ beast, poemTitle: title, poet, poemText: text })
@@ -123,6 +126,8 @@ async function generateStory() {
     utterance.rate = 0.9;
   } catch (err) {
     storyBox.innerHTML = "<em>暂时听不到神兽的声音...</em>";
+  } finally {
+    if (reloadBtn) reloadBtn.disabled = false;
   }
 }
 

@@ -11,6 +11,7 @@
       background: #121212;
       color: #eee;
       padding: 20px 15px;
+      touch-action: manipulation;
     }
     h1 { font-size: 24px; color: #f1c40f; text-align: center; margin-bottom: 10px; }
     p { font-size: 14px; text-align: center; color: #888; margin-bottom: 25px; }
@@ -53,13 +54,14 @@
     
     button {
       width: 100%;
-      padding: 15px;
+      padding: 16px;
       background: #e74c3c;
       color: #fff;
       border: none;
-      border-radius: 8px;
-      font-size: 17px;
+      border-radius: 12px;
+      font-size: 18px;
       font-weight: bold;
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
     }
     
     .result {
@@ -114,7 +116,7 @@
 
 <div class="actions">
   <button id="letter-btn" onclick="generateLetter()">📜 生成手抄诗笺</button>
-  <a href="age-gate.html">返回首页</a>
+  <a href="index.html">返回入口</a>
 </div>
 
 <script>
@@ -124,25 +126,27 @@ async function continuePoem() {
   const result = document.getElementById("result");
   if (!firstLine) return;
 
-  result.innerHTML = "<em style='color:#666'>正在为你续写...</em>";
+  const btn = document.querySelector('button');
+  btn.disabled = true;
+  btn.innerText = "古人提笔中...";
+  result.innerHTML = "<em>正在跨越时空续写...</em>";
 
   try {
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
+    // 使用相对路径，自动适配环境
+    const API_URL = "/api/creation/continue";
     
-    const res = await fetch(`${API_BASE_URL}/api/creation/continue`, {
+    const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstLine, mood })
     });
 
     const data = await res.json();
-    const continuation = data.continuation || "云深不知处，松风自吹寒。";
+    const continuation = data.continuation || "云深不知处...";
     
     result.innerHTML = `
-      <div class="user-line">${firstLine}</div>
-      <div class="ai-line">${continuation.replace(/\n/g, '<br>')}</div>
+      <div class="user-line">你：${firstLine}</div>
+      <div class="ai-line" style="margin-top:10px">古人续：<br>${continuation.replace(/\n/g, "<br>")}</div>
     `;
     
     document.getElementById("letter-btn").style.display = "block";
@@ -152,7 +156,10 @@ async function continuePoem() {
       author: '你与古人'
     };
   } catch (err) {
-    result.innerHTML = "<em style='color:#666'>请稍后再试</em>";
+    result.innerHTML = "<em>墨汁干了，请重试。</em>";
+  } finally {
+    btn.disabled = false;
+    btn.innerText = "AI 续写";
   }
 }
 

@@ -3,12 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- 引入思源宋体，使用国内镜像加速 -->
-<link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
 <title>记忆诗廊 · 文明回响</title>
 <style>
-  body {
+  * {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+  }
+  body {
     font-family: "Noto Serif SC", "宋体", serif;
     background: linear-gradient(to bottom, #f5e8d8, #e8d9c8);
     color: #3e2723;
@@ -269,7 +281,7 @@
   </div>
 
   <div class="actions">
-    <button onclick="location.href='age-gate.html'">← 返回年龄选择</button>
+    <button onclick="location.href='index.html'">返回选择入口</button>
     <button onclick="openPoemLetter()">📜 手抄诗笺</button>
     <button onclick="location.href='calligraphy.html'">✒️ 进入诗画共创</button>
   </div>

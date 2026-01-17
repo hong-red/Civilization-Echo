@@ -8,12 +8,24 @@
   }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- 引入思源宋体，使用国内镜像加速 -->
-<link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
 <title>诗词混创工坊 · 文明回响</title>
 <style>
-  body {
+  * {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+  }
+  body {
     font-family: "Noto Serif SC", "宋体", serif;
     background: linear-gradient(to bottom, #0a0e17, #1a2332);
     color: #e8e6e3;
@@ -234,7 +246,7 @@
     最终作品属于你，可保存、分享、投稿
   </p>
 
-  <button class="back-btn" onclick="location.href='age-gate.html'">
+  <button class="back-btn" onclick="location.href='index.html'">
     返回选择入口
   </button>
 </div>
@@ -253,16 +265,11 @@ async function continuePoem() {
   result.innerHTML = "<em>古人提笔，正在为你续写……</em>";
 
   try {
-    // 智能 API 基础 URL：本地用 localhost，线上用 Vercel
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
-    
-    const res = await fetch(`${API_BASE_URL}/api/creation/continue`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstLine, mood })
-    });
+      const res = await fetch("/api/creation/continue", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstLine, mood })
+      });
 
     const data = await res.json();
     const continuation = data.continuation || "云深不知处，松风自吹寒。一叶梦相关。";

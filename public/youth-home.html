@@ -3,12 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- 引入思源宋体，使用国内镜像加速 -->
-<link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
 <title>青年时空诗旅 · 文明回响</title>
 <style>
-  body {
+  * {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+  }
+  body {
     font-family: "Noto Serif SC", "宋体", serif;
     background: linear-gradient(to bottom right, #1a2a3a, #0f1e2e);
     color: #e0e0e0;
@@ -140,8 +152,8 @@
     进入时空对话
   </button>
 
-  <button class="back-to-age-gate-btn" onclick="location.href='age-gate.html'">
-    ← 返回年龄选择
+  <button class="back-to-age-gate-btn" onclick="location.href='index.html'">
+    ← 返回选择入口
   </button>
 
   <div class="tips">

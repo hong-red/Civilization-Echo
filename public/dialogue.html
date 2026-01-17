@@ -10,14 +10,25 @@
   <title>时空对话 · 苏轼 - 文明回响</title>
   <!-- 引入 Chart.js 用于诗词可视化 -->
   <script src="https://lib.baomitu.com/Chart.js/3.9.1/chart.min.js"></script>
-  <!-- 引入思源宋体，使用国内镜像加速 -->
-  <link rel="preconnect" href="https://fonts.loli.net">
-  <link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
   <style>
-    /* 全局基础样式 */
-    body {
-      margin: 0;
-      font-family: "Noto Serif SC", "宋体", serif;
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+  }
+  /* 全局基础样式 */
+  body {
+    font-family: "Noto Serif SC", "宋体", serif;
       background: #f6f4f1;
       color: #222;
       min-height: 100vh;
@@ -280,12 +291,7 @@ async function askSuShi() {
   document.getElementById("question").value = "";
 
   try {
-    // 智能 API 基础 URL：本地用 localhost，线上用 Vercel
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
-    
-    const res = await fetch(`${API_BASE_URL}/api/sushi`, {
+    const res = await fetch("/api/sushi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question })
