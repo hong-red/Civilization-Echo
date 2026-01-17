@@ -68,25 +68,34 @@ main {
 }
 .button-group {
   text-align: center;
-  margin: 30px 0;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 400px;
 }
 .button-group button {
-  margin: 8px;
-  padding: 10px 20px;
-  font-size: 15px;
+  width: 100%;
+  margin: 0;
+  padding: 14px 24px;
+  font-size: 16px;
   border: none;
-  border-radius: 30px;
+  border-radius: 12px;
   cursor: pointer;
   background: var(--accent);
   color: white;
   transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 .button-group button:hover {
   opacity: 0.9;
-  transform: scale(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
-.button-group button:nth-child(4) {
+.button-group button:last-child {
   background: #95a5a6;
+  margin-top: 8px;
 }
 footer {
   text-align: center;
@@ -138,19 +147,9 @@ footer {
   }
   
   .button-group {
-    margin: 20px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    margin: 20px auto;
     padding: 0 10px;
-  }
-  
-  .button-group button {
-    margin: 0;
-    padding: 12px 20px;
-    font-size: 16px;
     width: 100%;
-    border-radius: 12px;
   }
   
   footer {
@@ -191,10 +190,10 @@ footer {
 
 <script>
 const THEMES = {
-  青龙: { bg1: "#e6f5ef", bg2: "#f6fff9", accent: "#3b7f6b" },
-  白虎: { bg1: "#f8f8f8", bg2: "#ffffff", accent: "#555555" },
-  朱雀: { bg1: "#fff0ea", bg2: "#fff8f3", accent: "#e74c3c" },
-  玄武: { bg1: "#eef2f7", bg2: "#f9fbff", accent: "#34495e" }
+  青龙: { bg1: "#f0f9f4", bg2: "#ffffff", accent: "#2d6a4f" },
+  白虎: { bg1: "#f8f9fa", bg2: "#ffffff", accent: "#495057" },
+  朱雀: { bg1: "#fff5f5", bg2: "#ffffff", accent: "#c53030" },
+  玄武: { bg1: "#f0f4f8", bg2: "#ffffff", accent: "#2c5282" }
 };
 
 function get(name, fallback = "") {
@@ -218,7 +217,7 @@ async function generateStory() {
   document.documentElement.style.setProperty("--accent", theme.accent);
 
   // 更新页面标题和诗
-  document.getElementById("pageTitle").innerText = `${beast} 的诗故事`;
+  document.getElementById("pageTitle").innerText = `${beast}的诗故事`;
   document.getElementById("poemTitle").innerText = `${title} · ${poet}`;
   document.getElementById("poemText").innerText = text;
 
