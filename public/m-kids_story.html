@@ -107,6 +107,10 @@ async function generateStory() {
   
   storyBox.innerHTML = `<em>🌿 ${beast}正在编织故事...</em>`;
 
+  // 兼容性更好的超时处理
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 20000);
+
   try {
     // 使用相对路径，自动适配环境
     const API_URL = "/api/kids/story";
@@ -114,8 +118,15 @@ async function generateStory() {
     const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ beast, poemTitle: title, poet, poemText: text })
+      body: JSON.stringify({ beast, poemTitle: title, poet, poemText: text }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
 
     const data = await res.json();
     currentStory = data.story || "神兽去休息了。";
@@ -125,7 +136,13 @@ async function generateStory() {
     utterance.lang = "zh-CN";
     utterance.rate = 0.9;
   } catch (err) {
-    storyBox.innerHTML = "<em>暂时听不到神兽的声音...</em>";
+    clearTimeout(timeoutId);
+    console.error("Fetch error:", err);
+    let errorMsg = "暂时听不到神兽的声音...";
+    if (err.name === 'AbortError') {
+      errorMsg = "神兽思索太久，请换个故事试试。";
+    }
+    storyBox.innerHTML = `<em>${errorMsg}</em><br><button onclick="reloadStory()" style="margin-top:10px; padding:8px; font-size:14px; width:auto; background:#444; color:white; border:none; border-radius:5px;">重新呼唤</button>`;
   } finally {
     if (reloadBtn) reloadBtn.disabled = false;
   }
