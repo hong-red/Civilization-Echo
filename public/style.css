@@ -80,6 +80,54 @@ footer {
   background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
 }
 
+/* 移动端适配 */
+@media (max-width: 768px) {
+  header {
+    padding: 40px 20px 30px;
+  }
+  
+  header h1 {
+    font-size: 28px;
+  }
+  
+  header p {
+    font-size: 14px;
+  }
+  
+  main {
+    padding: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  
+  .card {
+    padding: 20px;
+  }
+  
+  .card h2 {
+    font-size: 20px;
+  }
+  
+  .card p {
+    font-size: 13px;
+  }
+  
+  footer {
+    padding: 20px;
+    font-size: 12px;
+  }
+  
+  /* Splash Screen 移动端适配 */
+  #splash-screen {
+    padding: 20px;
+  }
+  
+  .splash-text {
+    font-size: 2em;
+    margin-top: 15px;
+  }
+}
+
 /* Splash Screen Styles */
 #splash-screen {
   position: fixed;
