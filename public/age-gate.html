@@ -15,98 +15,16 @@
     background: linear-gradient(to bottom, #f8f5f0, #e8e2d8);
     color: #333;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
     position: relative;
-  }
-
-  /* 水墨开场动画 */
-  #splash-screen {
-    position: fixed;
-    inset: 0;
-    background: #fffef7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    transition: opacity 1.5s ease-out;
-  }
-  
-  /* 跳过按钮样式 */
-  .skip-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 8px 16px;
-    background: rgba(0, 0, 0, 0.1);
-    color: #666;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 1001;
-  }
-  
-  .skip-btn:hover {
-    background: rgba(0, 0, 0, 0.2);
-    color: #333;
-    transform: translateY(-2px);
-  }
-  
-  /* 移动端跳过按钮适配 */
-  @media (max-width: 768px) {
-    .skip-btn {
-      top: 15px;
-      right: 15px;
-      padding: 6px 12px;
-      font-size: 13px;
-    }
-  }
-  .ink-splash {
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(50,50,50,0.5) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: inkSpread 3s ease-out forwards;
-    position: relative;
-    z-index: 1;
-  }
-  .ink-splash::after {
-    content: '';
-    position: absolute;
-    inset: 20%;
-    background: radial-gradient(circle, rgba(30,30,30,0.4) 0%, transparent 60%);
-    border-radius: 50%;
-    animation: inkSpread 3s 0.5s ease-out forwards;
-    z-index: 1;
-  }
-  @keyframes inkSpread {
-    0% { transform: scale(0); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: scale(4); opacity: 0; }
-  }
-  .splash-text {
-    margin-top: 40px;
-    font-size: 36px;
-    color: #444;
-    letter-spacing: 8px;
-    opacity: 0;
-    animation: fadeIn 2s 1s forwards;
-    z-index: 2;
-    position: relative;
-  }
-  @keyframes fadeIn {
-    to { opacity: 1; }
   }
 
   /* 主内容 */
   header {
     text-align: center;
     padding: 80px 20px 40px;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 1.2s ease-out 1s;
+    opacity: 1;
+    transform: translateY(0);
   }
   header h1 {
     font-size: 40px;
@@ -125,9 +43,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 40px;
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 1.4s ease-out 1.3s;
+    opacity: 1;
+    transform: translateY(0);
   }
   .card {
     background: rgba(255,255,255,0.85);
@@ -171,38 +88,8 @@
     background: rgba(255,255,255,0.6);
   }
 
-  /* 动画完成后的状态 */
-  body.loaded #splash-screen {
-    opacity: 0;
-    pointer-events: none;
-  }
-  body.loaded header,
-  body.loaded main {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
   /* 移动端适配 */
   @media (max-width: 768px) {
-    body {
-      overflow-x: hidden;
-    }
-    
-    #splash-screen {
-      padding: 20px;
-    }
-    
-    .ink-splash {
-      width: 200px;
-      height: 200px;
-    }
-    
-    .splash-text {
-      font-size: 24px;
-      letter-spacing: 4px;
-      margin-top: 30px;
-    }
-    
     header {
       padding: 40px 20px 20px;
     }
@@ -241,13 +128,6 @@
 </head>
 <body>
 
-<!-- 开场水墨动画 -->
-<div id="splash-screen">
-  <button class="skip-btn" onclick="skipAnimation()">跳过</button>
-  <div class="ink-splash"></div>
-  <div class="splash-text">文明回响 · 时空诗旅</div>
-</div>
-
 <header>
   <h1>文明回响 · 时空诗旅</h1>
   <p>请选择你的旅程入口，与千年前的思想相遇</p>
@@ -276,38 +156,6 @@
 <footer>
   文明回响 · 一个让文明重新与人对话的数字入口
 </footer>
-
-<script>
-  // 跳过动画函数
-  function skipAnimation() {
-    document.body.classList.add('loaded');
-  }
-
-  // 页面加载时重置动画状态
-  window.addEventListener('load', () => {
-    // 确保 body 没有 loaded 类
-    document.body.classList.remove('loaded');
-    // 重置 splash 屏幕样式
-    const splashScreen = document.getElementById('splash-screen');
-    splashScreen.style.opacity = '1';
-    splashScreen.style.pointerEvents = 'auto';
-    
-    // 延迟后显示主内容
-    setTimeout(() => {
-      document.body.classList.add('loaded');
-    }, 3500); // 与水墨动画时长匹配
-  });
-
-  // 可选：点击 splash 直接跳过动画
-  document.getElementById('splash-screen').addEventListener('click', () => {
-    document.body.classList.add('loaded');
-  });
-
-  // 页面离开时清除状态，确保返回时动画重新播放
-  window.addEventListener('beforeunload', () => {
-    document.body.classList.remove('loaded');
-  });
-</script>
 
 </body>
 </html>
