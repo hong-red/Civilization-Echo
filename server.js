@@ -14,9 +14,13 @@ app.use(express.json());
 /* ===== 再 CORS（一定在路由前）===== */
 app.use(cors({
   origin: ["http://127.0.0.1:3000", "http://localhost:3000", "https://hong-red.github.io", "https://civilization-echo.vercel.app"],
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type"]
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
+
+// 处理 OPTIONS 请求
+app.options('*', cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 /* ===== API Key ===== */
