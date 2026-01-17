@@ -51,9 +51,10 @@ async function callKimi(messages, temperature = 0.8) {
   if (!KIMI_API_KEY) throw new Error("缺少 KIMI_API_KEY");
   
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8500); // 8.5秒超时，留给Vercel一点缓冲
+  const timeoutId = setTimeout(() => controller.abort(), 9500); // 9.5秒超时，Vercel Hobby 免费版限制为 10秒
 
   try {
+    console.log(`[AI Request] Messages: ${JSON.stringify(messages.slice(-1))}`);
     // Node 20+ 原生支持 fetch
     const response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
       method: "POST",
@@ -73,15 +74,20 @@ async function callKimi(messages, temperature = 0.8) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`API 返回错误: ${response.status} ${errorText}`);
+      console.error(`[AI Error] status: ${response.status}, body: ${errorText}`);
+      throw new Error(`API 返回错误: ${response.status}`);
     }
     
-    return await response.json();
+    const result = await response.json();
+    console.log(`[AI Success] Response received`);
+    return result;
   } catch (err) {
     clearTimeout(timeoutId);
     if (err.name === 'AbortError') {
+      console.warn("[AI Timeout] Request exceeded 9.5s limit");
       throw new Error("AI 响应超时，请稍后再试");
     }
+    console.error(`[AI Exception] ${err.message}`);
     throw err;
   }
 }

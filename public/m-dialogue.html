@@ -147,14 +147,26 @@ async function askSuShi() {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question })
+        body: JSON.stringify({ question }),
+        signal: AbortSignal.timeout(20000) // 20秒超时
       });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       
       const data = await res.json();
       box.innerHTML = `<p>${(data.answer || "风雨太大，暂未收到回信").replace(/\n/g, "<br>")}</p>`;
       document.getElementById("question").value = "";
     } catch (err) {
-      box.innerHTML = "<em style='color:#999'>江上雾起，请稍后再试。</em>";
+      console.error("Fetch error:", err);
+      let errorMsg = "江上雾起，请稍后再试。";
+      if (err.name === 'TimeoutError') {
+        errorMsg = "先生思索太久，请重试。";
+      } else if (err.message.includes('status: 500')) {
+        errorMsg = "后端服务暂时告假，请稍后再试。";
+      }
+      box.innerHTML = `<em style='color:#d32f2f'>${errorMsg}</em><br><button onclick="askSuShi()" style="margin-top:10px; padding:8px; font-size:14px; width:auto">重试</button>`;
     } finally {
       btn.disabled = false;
       btn.innerText = "发送问题";
