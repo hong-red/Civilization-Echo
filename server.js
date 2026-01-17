@@ -9,30 +9,38 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 
-app.use(express.json());
-
-/* ===== 再 CORS（确保在所有逻辑之前）===== */
+// 1. 日志中间件 (放在最前面)
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  
-  // 处理预检请求 (Preflight)
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
 
+// 2. CORS 中间件 (直接使用 cors 库，配置最宽松策略)
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
+
+// 3. 解析 JSON
+app.use(express.json());
+
+// 4. 静态文件
 app.use(express.static(path.join(__dirname, "public")));
 
 /* ===== API Key ===== */
 let KIMI_API_KEY = process.env.KIMI_API_KEY;
-// 不需要直接退出进程，在API调用时检查
 
-/* ===== 根页面 ===== */
+/* ===== 路由 ===== */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
+// 健康检查接口，用于测试后端是否活着
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", time: new Date().toISOString(), hasKey: !!KIMI_API_KEY });
 });
 
 /* ===============================
