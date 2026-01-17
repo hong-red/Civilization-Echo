@@ -5,160 +5,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>诗词混创 (移动版)</title>
   <style>
-    :root {
-      --primary: #e74c3c;
-      --bg: #121212;
-      --card-bg: #1e1e1e;
-      --accent: #f1c40f;
-    }
     body {
       margin: 0;
-      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #121212;
       color: #eee;
-      padding: 0;
+      padding: 20px 15px;
       touch-action: manipulation;
     }
-    
-    .hero {
-      background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(18,18,18,1) 100%), url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=1000&auto=format&fit=crop');
-      background-size: cover;
-      background-position: center;
-      padding: 50px 20px;
-      text-align: center;
-    }
-    
-    h1 { font-size: 28px; color: var(--accent); margin: 0; letter-spacing: 3px; }
-    .hero p { font-size: 14px; color: #aaa; margin: 10px 0 0; }
-    
-    main { padding: 20px 15px; }
+    h1 { font-size: 24px; color: #f1c40f; text-align: center; margin-bottom: 10px; }
+    p { font-size: 14px; text-align: center; color: #888; margin-bottom: 25px; }
     
     .input-box {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 16px;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
     }
     
     textarea {
       width: 100%;
-      height: 100px;
-      background: rgba(255,255,255,0.05);
+      height: 90px;
+      background: transparent;
       border: 1px solid #333;
-      border-radius: 12px;
+      border-radius: 8px;
       color: #fff;
-      padding: 15px;
+      padding: 12px;
       font-size: 17px;
       box-sizing: border-box;
-      margin-bottom: 20px;
-      transition: all 0.3s;
-      resize: none;
-    }
-    textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: rgba(255,255,255,0.1);
+      margin-bottom: 15px;
     }
     
     .controls {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
     }
     
     select {
       width: 100%;
-      padding: 15px;
+      padding: 14px;
       background: #2c2c2c;
       color: #fff;
-      border: 1px solid #444;
-      border-radius: 12px;
+      border: none;
+      border-radius: 8px;
       font-size: 16px;
-      appearance: none;
     }
     
-    button#submit-btn {
+    button {
       width: 100%;
       padding: 16px;
-      background: var(--primary);
+      background: #e74c3c;
       color: #fff;
       border: none;
       border-radius: 12px;
       font-size: 18px;
       font-weight: bold;
-      box-shadow: 0 6px 16px rgba(231, 76, 60, 0.3);
-      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
     }
-    button#submit-btn:active { transform: scale(0.98); }
-    button#submit-btn:disabled { background: #555; box-shadow: none; }
     
     .result {
-      background: var(--card-bg);
-      padding: 25px;
-      border-radius: 16px;
-      min-height: 120px;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      min-height: 100px;
       text-align: center;
-      line-height: 2;
+      line-height: 1.8;
       font-size: 18px;
-      border: 1px dashed #444;
-      margin-top: 10px;
     }
     
-    .user-line { color: var(--accent); font-weight: bold; }
-    .ai-line { color: #87CEEB; font-style: italic; }
+    .user-line { color: #f1c40f; }
+    .ai-line { color: #87CEEB; }
     
-    .actions { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
+    .actions { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
     .actions a, .actions button#letter-btn {
       text-align: center;
-      padding: 15px;
+      padding: 12px;
       background: #333;
       color: #ccc;
       text-decoration: none;
-      border-radius: 12px;
-      font-size: 16px;
-      border: 1px solid #444;
-    }
-    #letter-btn { 
-      background: linear-gradient(90deg, #d35400, #e67e22);
-      color: #fff; 
-      display: none; 
+      border-radius: 8px;
+      font-size: 15px;
       border: none;
-      font-weight: bold;
     }
+    #letter-btn { background: #d35400; color: #fff; display: none; }
   </style>
 </head>
 <body>
 
-<div class="hero">
-  <h1>🖋️ 诗词混创</h1>
-  <p>跨越时空，与古人合赋新章</p>
+<h1>🖋️ 诗词混创</h1>
+<p>你起一句，我续三句</p>
+
+<div class="input-box">
+  <textarea id="firstLine" placeholder="输入第一句诗..."></textarea>
+  <div class="controls">
+    <select id="mood">
+      <option value="自由">自由挥洒</option>
+      <option value="孤独">淡淡孤独</option>
+      <option value="漂泊">漂泊苍凉</option>
+      <option value="喜悦">明快喜悦</option>
+      <option value="思念">柔软相思</option>
+    </select>
+    <button onclick="continuePoem()">AI 续写</button>
+  </div>
 </div>
 
-<main>
-  <div class="input-box">
-    <textarea id="firstLine" placeholder="写下你的第一句诗..."></textarea>
-    <div class="controls">
-      <select id="mood">
-        <option value="自由">意境：自由挥洒</option>
-        <option value="孤独">意境：淡淡孤独</option>
-        <option value="漂泊">意境：漂泊苍凉</option>
-        <option value="喜悦">意境：明快喜悦</option>
-        <option value="思念">意境：柔软相思</option>
-      </select>
-      <button id="submit-btn" onclick="continuePoem()">AI 续写</button>
-    </div>
-  </div>
+<div class="result" id="result">
+  <em style="color:#666">等待你的开头...</em>
+</div>
 
-  <div class="result" id="result">
-    <em style="color:#666">静待墨迹洇开...</em>
-  </div>
-
-  <div class="actions">
-    <button id="letter-btn" onclick="generateLetter()">📜 生成手抄诗笺</button>
-    <a href="index.html">返回时空入口</a>
-  </div>
-</main>
+<div class="actions">
+  <button id="letter-btn" onclick="generateLetter()">📜 生成手抄诗笺</button>
+  <a href="index.html">返回入口</a>
+</div>
 
 <script>
 async function continuePoem() {
@@ -167,35 +126,20 @@ async function continuePoem() {
   const result = document.getElementById("result");
   if (!firstLine) return;
 
-  const btn = document.getElementById("submit-btn");
+  const btn = document.querySelector('button');
   btn.disabled = true;
   btn.innerText = "古人提笔中...";
   result.innerHTML = "<em>正在跨越时空续写...</em>";
 
-  // 兼容性更好的超时处理
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 20000);
-
-  // 自动检测 API 基础路径
-  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? "" 
-    : "https://civilization-echo.vercel.app";
-
   try {
-    const API_URL = `${API_BASE}/api/creation/continue`;
+    // 使用相对路径，自动适配环境
+    const API_URL = "/api/creation/continue";
     
     const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstLine, mood }),
-      signal: controller.signal
+      body: JSON.stringify({ firstLine, mood })
     });
-
-    clearTimeout(timeoutId);
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
 
     const data = await res.json();
     const continuation = data.continuation || "云深不知处...";
@@ -212,15 +156,7 @@ async function continuePoem() {
       author: '你与古人'
     };
   } catch (err) {
-    clearTimeout(timeoutId);
-    console.error("Fetch error:", err);
-    let errorMsg = "墨汁干了，请重试。";
-    if (err.name === 'AbortError') {
-      errorMsg = "古人思索良久，笔墨已干，请重试。";
-    } else if (err.message.includes('status: 500')) {
-      errorMsg = "书院休整中，请稍后再试。";
-    }
-    result.innerHTML = `<em style='color:#e74c3c'>${errorMsg}</em><br><button onclick="continuePoem()" style="margin-top:10px; padding:8px; font-size:14px; width:auto; background:#444; color:white; border:none; border-radius:5px;">重新研墨</button>`;
+    result.innerHTML = "<em>墨汁干了，请重试。</em>";
   } finally {
     btn.disabled = false;
     btn.innerText = "AI 续写";
