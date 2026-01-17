@@ -245,8 +245,16 @@ async function generateStory() {
   const btn = document.querySelector('button[onclick="reloadStory()"]');
   if (btn) btn.disabled = true;
 
+  // 自动检测 API 基础路径
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? "" 
+    : "https://civilization-echo.vercel.app";
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 20000);
+
   try {
-    const response = await fetch("/api/kids/story", {
+    const response = await fetch(`${API_BASE}/api/kids/story`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -255,8 +263,10 @@ async function generateStory() {
         poet: poet,
         poemText: text
       }),
-      signal: AbortSignal.timeout(20000) // 20秒前端超时
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) throw new Error("API 请求失败: " + response.status);
 
@@ -272,9 +282,10 @@ async function generateStory() {
     utterance.pitch = 1.1;
 
   } catch (err) {
+    clearTimeout(timeoutId);
     console.error("故事生成异常：", err);
     let errorMsg = `🌫 云雾太重，${beast}的声音暂时传不过来...`;
-    if (err.name === 'TimeoutError') {
+    if (err.name === 'AbortError') {
       errorMsg = `⏳ ${beast}睡着了，请再叫醒它试试。`;
     }
     storyBox.innerHTML = `

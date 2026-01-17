@@ -111,9 +111,13 @@ async function generateStory() {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-  try {
-    // 使用相对路径，自动适配环境
-    const API_URL = "/api/kids/story";
+  // 自动检测 API 基础路径
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? "" 
+      : "https://civilization-echo.vercel.app";
+
+    try {
+      const API_URL = `${API_BASE}/api/kids/story`;
     
     const res = await fetch(API_URL, {
       method: "POST",
