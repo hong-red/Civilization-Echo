@@ -13,7 +13,7 @@ app.use(express.json());
 
 /* ===== 再 CORS（一定在路由前）===== */
 app.use(cors({
-  origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
+  origin: ["http://127.0.0.1:3000", "http://localhost:3000", "https://hong-red.github.io", "https://civilization-echo.vercel.app"],
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"]
 }));
@@ -28,7 +28,7 @@ if (!KIMI_API_KEY) {
 
 /* ===== 根页面 ===== */
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/kid.html"));
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 /* ===============================
@@ -135,11 +135,6 @@ app.post("/api/sushi", async (req, res) => {
   }
 });
 
-/* ===== 启动 ===== */
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ 文明回响已启动：http://127.0.0.1:${PORT}`);
-});
 /* ===============================
 //  API：诗词混创工坊（AI协助续写）
 ================================ */
@@ -199,4 +194,11 @@ app.post("/api/creation/continue", async (req, res) => {
       continuation: "墨汁晕开了，\n古人暂未落笔。\n稍候再试吧。" 
     });
   }
+});
+
+/* ===== 启动 ===== */
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ 文明回响已启动：http://127.0.0.1:${PORT}`);
+  console.log(`✅ 服务器地址：http://0.0.0.0:${PORT}`);
 });
