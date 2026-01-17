@@ -239,7 +239,7 @@ async function generateStory() {
 
   // 自动超时处理
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15秒前端超时
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // 前端超时增加到 30 秒
 
   try {
     // 智能 API 基础 URL：本地用 localhost，线上用 Vercel

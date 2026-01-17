@@ -51,7 +51,7 @@ async function callKimi(messages, temperature = 0.8) {
   if (!KIMI_API_KEY) throw new Error("缺少 KIMI_API_KEY");
   
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8500); // 8.5秒超时，留给Vercel一点缓冲
+  const timeoutId = setTimeout(() => controller.abort(), 25000); // 增加超时到 25 秒，给 AI 更多时间生成内容
 
   try {
     // Node 20+ 原生支持 fetch
