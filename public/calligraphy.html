@@ -156,90 +156,33 @@
 
   /* 移动端适配 */
   @media (max-width: 768px) {
+    body {
+      background: #fdf6e3;
+      font-family: -apple-system, sans-serif;
+    }
     header {
       padding: 30px 15px 20px;
+      background: #fff;
     }
-    
-    header h1 {
-      font-size: 26px;
-      margin-bottom: 8px;
-    }
-    
-    header p {
-      font-size: 15px;
-      line-height: 1.4;
-    }
-    
-    main {
-      padding: 10px 15px;
-    }
-    
+    header h1 { font-size: 26px; }
+    main { padding: 10px; }
     .upload-area {
-      max-width: 100%;
-      padding: 25px 15px;
-      margin-bottom: 25px;
-      border-radius: 16px;
+      padding: 20px;
+      box-shadow: none;
+      border: 1px solid #ddd;
     }
-    
     .upload-box {
-      padding: 25px 15px;
-      border-width: 2px;
-    }
-    
-    .upload-box p:first-child {
-      font-size: 18px;
-      margin: 5px 0;
-    }
-    
-    .preview {
-      max-height: 280px;
-      margin: 15px 0;
-    }
-    
-    .result {
-      max-width: 100%;
-      padding: 20px 15px;
-      border-radius: 16px;
-    }
-    
-    .matched-poem {
-      font-size: 19px;
-      line-height: 1.9;
-      margin: 15px 0;
-    }
-    
-    .poem-author {
-      font-size: 15px;
-      margin: 8px 0;
-    }
-    
-    button {
-      margin: 10px 0;
-      padding: 14px 24px;
-      font-size: 17px;
-      width: 100%;
-      border-radius: 12px;
-    }
-    
-    .tip {
-      font-size: 13px;
-      margin-top: 20px;
-      line-height: 1.6;
-      padding: 0 10px;
-    }
-    
-    .back-btn {
-      margin-top: 25px;
-      padding: 12px 24px;
-      font-size: 15px;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    
-    footer {
       padding: 30px 15px;
-      font-size: 12px;
+      transform: none !important;
+      transition: none !important;
+    }
+    .result {
+      padding: 20px;
+      box-shadow: none;
+      border: 1px solid #ddd;
+    }    .matched-poem {
+      font-size: 18px;
+      line-height: 1.8;
     }
   }
 </style>

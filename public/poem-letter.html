@@ -108,59 +108,53 @@
   @media (max-width: 768px) {
     body {
       padding: 15px 10px;
+      background: #f9f5f0;
+      font-family: -apple-system, sans-serif;
     }
-    
     .paper {
-      padding: 50px 25px;
-      max-width: 100%;
+      padding: 40px 20px;
       border-radius: 12px;
+      box-shadow: none;
+      border: 1px solid #e8d8c8;
     }
-    
+    .paper::before {
+      display: none; /* 移动端禁用复杂背景 */
+    }
     .title {
       font-size: 24px;
-      margin-bottom: 40px;
-      letter-spacing: 6px;
+      margin-bottom: 30px;
+      letter-spacing: 4px;
     }
-    
     .poem {
-      font-size: 22px;
-      line-height: 2.2;
+      font-size: 20px;
+      line-height: 1.8;
       margin: 40px 0;
     }
-    
     .author {
       font-size: 18px;
       margin-top: 30px;
     }
-    
     .signature {
       margin-top: 60px;
       font-size: 16px;
       width: 100%;
-      padding-top: 20px;
     }
-    
     .actions {
-      margin: 25px 0;
       display: flex;
       flex-direction: column;
       gap: 12px;
       width: 100%;
-      padding: 0 10px;
+      padding: 0 20px;
+      box-sizing: border-box;
     }
-    
     button {
-      margin: 0;
-      padding: 14px 28px;
-      font-size: 16px;
       width: 100%;
-      border-radius: 12px;
-    }
-    
-    .tip {
-      font-size: 13px;
-      margin-top: 15px;
-      padding: 0 10px;
+      margin: 0;
+      padding: 14px;
+      font-size: 18px;
+      border-radius: 8px;
+      transform: none !important;
+      transition: none !important;
     }
   }
 </style>
