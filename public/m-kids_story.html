@@ -5,57 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>神兽故事 (极简版)</title>
   <style>
-    :root { --accent: #666; }
+    :root { 
+      --accent: #666; 
+      --bg: #f8f9fa;
+    }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #fff;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
       color: #333;
-      padding: 10px;
+      padding: 0;
       touch-action: manipulation;
     }
-    header { text-align: center; margin-bottom: 15px; }
-    header h1 { font-size: 18px; color: #444; margin: 0; }
+    
+    .header-banner {
+      background: var(--accent);
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .header-banner h1 { margin: 0; font-size: 26px; letter-spacing: 2px; }
+    
+    main { padding: 20px 15px; }
     
     .box {
-      background: #fdfdfd;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 12px;
-      border: 1px solid #eee;
-      line-height: 1.5;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      line-height: 1.8;
+      border: 1px solid rgba(0,0,0,0.03);
     }
     
-    .poem-box { text-align: center; border-left: 3px solid var(--accent); }
-    .poem-title { font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #222; }
-    .poem-text { white-space: pre-line; font-size: 16px; color: #444; }
+    .poem-box { 
+      text-align: center; 
+      border-top: 3px solid var(--accent);
+      background: #fffaf0;
+    }
+    .poem-title { font-weight: bold; font-size: 18px; margin-bottom: 12px; color: #222; }
+    .poem-text { white-space: pre-line; font-size: 16px; color: #555; font-family: serif; }
     
-    .story-box { font-size: 15px; min-height: 80px; background: #f9f9f9; }
+    .story-box { 
+      font-size: 16px; 
+      min-height: 120px; 
+      color: #444;
+      position: relative;
+    }
+    .story-box::first-letter {
+      font-size: 24px;
+      color: var(--accent);
+      font-weight: bold;
+    }
     
     .btns {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
     }
     
     button {
       width: 100%;
-      padding: 12px;
+      padding: 16px;
       border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      background: #444;
-      color: #fff;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.2s;
     }
+    button:active { transform: scale(0.98); }
     
-    .back-btn { background: #888; }
+    .play-btn { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .reload-btn { background: #fff; color: var(--accent); border: 1px solid var(--accent); }
+    .back-btn { background: #666; color: #fff; margin-top: 10px; }
+    
+    button:disabled { opacity: 0.6; }
   </style>
 </head>
 <body>
 
-<header>
+<div class="header-banner" id="headerBanner">
   <h1 id="pageTitle">神兽故事</h1>
-</header>
+</div>
 
 <main>
   <div class="box story-box" id="storyBox">
@@ -68,8 +102,8 @@
   </div>
 
   <div class="btns">
-    <button onclick="playStory()">🔊 播放故事</button>
-    <button onclick="reloadStory()">🔄 换个故事</button>
+    <button class="play-btn" onclick="playStory()">🔊 听神兽讲故事</button>
+    <button class="reload-btn" id="reloadBtn" onclick="reloadStory()">🔄 换个故事</button>
     <a href="m-kid.html" style="text-decoration:none;"><button class="back-btn">🏠 返回神兽园</button></a>
   </div>
 </main>
@@ -102,7 +136,7 @@ async function generateStory() {
   document.getElementById("poemText").innerText = text;
 
   const storyBox = document.getElementById("storyBox");
-  const reloadBtn = document.querySelector('button[onclick="reloadStory()"]');
+  const reloadBtn = document.getElementById("reloadBtn");
   if (reloadBtn) reloadBtn.disabled = true;
   
   storyBox.innerHTML = `<em>🌿 ${beast}正在编织故事...</em>`;

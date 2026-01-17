@@ -5,95 +5,149 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>时空对话 · 苏轼 (移动版)</title>
   <style>
+    :root {
+      --primary: #8d6e63;
+      --bg: #fdfcf8;
+      --card-bg: #ffffff;
+      --text: #333333;
+    }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: #fdfcf8;
-      color: #333;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
       padding-bottom: 40px;
       touch-action: manipulation;
     }
     header {
-      background: #3e2723;
+      background: linear-gradient(135deg, #3e2723 0%, #5d4037 100%);
       color: #fff;
-      padding: 20px 15px;
+      padding: 30px 20px;
       text-align: center;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
-    header h1 { margin: 0; font-size: 22px; }
+    header h1 { margin: 0; font-size: 24px; letter-spacing: 2px; }
+    header p { margin: 10px 0 0; font-size: 14px; opacity: 0.8; }
     
-    main { padding: 15px; }
+    main { padding: 20px 15px; }
     
     .chat-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 15px;
-      border: 1px solid #eee;
-      margin-bottom: 20px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
     }
     
     textarea {
       width: 100%;
-      height: 100px;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      height: 120px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
       font-size: 16px;
       box-sizing: border-box;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
+      background: #fafafa;
+      resize: none;
+      transition: all 0.3s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.1);
     }
     
     button {
       width: 100%;
       padding: 16px;
-      background: #8d6e63;
+      background: var(--primary);
       color: #fff;
       border: none;
       border-radius: 12px;
       font-size: 18px;
       font-weight: bold;
-      box-shadow: 0 4px 12px rgba(141, 110, 99, 0.2);
+      box-shadow: 0 6px 16px rgba(141, 110, 99, 0.3);
+      transition: transform 0.2s;
     }
+    button:active { transform: scale(0.98); }
+    button:disabled { background: #ccc; box-shadow: none; }
     
     .answer {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f5f5f5;
-      border-radius: 8px;
-      line-height: 1.7;
-      min-height: 60px;
-      border-left: 4px solid #8d6e63;
+      margin-top: 25px;
+      padding: 20px;
+      background: #f9f7f2;
+      border-radius: 12px;
+      line-height: 1.8;
+      min-height: 80px;
+      border-left: 5px solid var(--primary);
+      font-size: 16px;
+      position: relative;
+    }
+    .answer::before {
+      content: "“";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 40px;
+      color: var(--primary);
+      opacity: 0.1;
+      font-family: serif;
     }
     
     .poem-section {
-      background: #fff;
-      border-radius: 12px;
-      padding: 15px;
-      border: 1px solid #eee;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+      border: 1px solid rgba(141, 110, 99, 0.1);
+    }
+    .poem-section h3 {
+      margin-top: 0;
+      font-size: 18px;
+      color: var(--primary);
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
     }
     
     .poem-text {
       white-space: pre-line;
       text-align: center;
-      line-height: 2;
-      font-size: 16px;
-      color: #444;
-      margin: 15px 0;
+      line-height: 2.2;
+      font-size: 17px;
+      color: #555;
+      margin: 20px 0;
+      font-family: "Noto Serif SC", serif;
     }
     
     .nav-btns {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-top: 20px;
+      gap: 12px;
+      margin-top: 30px;
     }
     
     .nav-btns a {
       text-align: center;
-      padding: 12px;
-      background: #eee;
+      padding: 14px;
+      background: #fff;
       color: #666;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 12px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      transition: all 0.3s;
+    }
+    .nav-btns a:active { background: #f5f5f5; }
+    
+    .retry-btn {
+      margin-top: 15px;
+      background: #555;
+      padding: 10px;
       font-size: 15px;
     }
   </style>
@@ -101,22 +155,23 @@
 <body>
 
 <header>
-  <h1>文明回响 · 时空对话</h1>
+  <h1>时空对话 · 苏轼</h1>
+  <p>跨越千年，与东坡居士促膝长谈</p>
 </header>
 
 <main>
   <div class="chat-box">
-    <h3 style="margin-top:0">与苏轼对话</h3>
-    <textarea id="question" placeholder="问问东坡先生吧..."></textarea>
-    <button onclick="askSuShi()">发送问题</button>
+    <textarea id="question" placeholder="问问先生关于人生、诗词或是美食的问题..."></textarea>
+    <button onclick="askSuShi()">投递书信</button>
     <div class="answer" id="answerBox">
-      <em style="color:#999">东坡在月下独酌，等你来问……</em>
+      <em>静候先生回信...</em>
     </div>
   </div>
 
   <div class="poem-section">
-    <h3 style="margin-top:0">今日诗荐</h3>
+    <h3>今日荐读</h3>
     <div class="poem-text">
+      《定风波》
       莫听穿林打叶声，何妨吟啸且徐行。
       竹杖芒鞋轻胜马，谁怕？
       一蓑烟雨任平生。
@@ -124,8 +179,7 @@
   </div>
 
   <div class="nav-btns">
-    <a href="index.html">返回入口</a>
-    <a href="m-creation.html">诗词混创</a>
+    <a href="index.html">返回时空入口</a>
   </div>
 </main>
 

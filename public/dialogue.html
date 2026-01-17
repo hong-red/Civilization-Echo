@@ -295,23 +295,13 @@ async function askSuShi() {
     btn.innerText = "正在回信...";
   }
 
-  // 自动检测 API 基础路径
-  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? "" 
-    : "https://civilization-echo.vercel.app";
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 20000);
-
   try {
-    const res = await fetch(`${API_BASE}/api/sushi`, {
+    const res = await fetch("/api/sushi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question }),
-      signal: controller.signal
+      signal: AbortSignal.timeout(20000) // 20秒超时
     });
-    
-    clearTimeout(timeoutId);
 
     if (!res.ok) {
       throw new Error("网络响应失败：" + res.status);
@@ -327,10 +317,9 @@ async function askSuShi() {
     `;
     document.getElementById("question").value = "";
   } catch (err) {
-    clearTimeout(timeoutId);
     console.error("对话接口异常：", err);
     let errorMsg = "江上雾起，书信暂未送到……请稍后再试。";
-    if (err.name === 'AbortError') {
+    if (err.name === 'TimeoutError') {
       errorMsg = "先生思索太久，可能江上风大，请重试。";
     }
     box.innerHTML = `
