@@ -242,9 +242,8 @@ async function generateStory() {
   const storyBox = document.getElementById("storyBox");
   storyBox.innerHTML = `<em>🌿 ${beast}正在为你编织故事...<br>(AI 创作中，大约需要 10 秒)</em>`;
 
-  // 自动超时处理
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15秒前端超时
+  const btn = document.querySelector('button[onclick="reloadStory()"]');
+  if (btn) btn.disabled = true;
 
   try {
     const response = await fetch("/api/kids/story", {
@@ -256,12 +255,10 @@ async function generateStory() {
         poet: poet,
         poemText: text
       }),
-      signal: controller.signal
+      signal: AbortSignal.timeout(20000) // 20秒前端超时
     });
 
-    clearTimeout(timeoutId);
-
-    if (!response.ok) throw new Error("API 请求失败");
+    if (!response.ok) throw new Error("API 请求失败: " + response.status);
 
     const data = await response.json();
     currentStory = data.story || "神兽走进云雾里了，一会儿再来吧。";
@@ -275,14 +272,19 @@ async function generateStory() {
     utterance.pitch = 1.1;
 
   } catch (err) {
-    clearTimeout(timeoutId);
-    console.error(err);
+    console.error("故事生成异常：", err);
+    let errorMsg = `🌫 云雾太重，${beast}的声音暂时传不过来...`;
+    if (err.name === 'TimeoutError') {
+      errorMsg = `⏳ ${beast}睡着了，请再叫醒它试试。`;
+    }
     storyBox.innerHTML = `
-      <em>🌫 云雾太重，${beast}的声音暂时传不过来...</em><br>
+      <em>${errorMsg}</em><br>
       <button onclick="generateStory()" style="margin-top:15px; padding:8px 20px; background:#e67e22; color:white; border:none; border-radius:20px; cursor:pointer;">
         再请神兽讲一遍
       </button>
     `;
+  } finally {
+    if (btn) btn.disabled = false;
   }
 }
 
