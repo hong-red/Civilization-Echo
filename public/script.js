@@ -9,7 +9,7 @@ window.addEventListener('load', () => {
   };
 
   // Auto-hide after animation + delay
-  setTimeout(hideSplashScreen, 3500);
+  setTimeout(hideSplashScreen, 1800);
 
   // Click to skip
   splashScreen.addEventListener('click', hideSplashScreen);

@@ -82,6 +82,16 @@ footer {
 
 /* 移动端适配 */
 @media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+  
+  .card {
+    backdrop-filter: none; /* 关闭高能耗特效 */
+    background: rgba(255, 255, 255, 0.95);
+    touch-action: manipulation; /* 消除点击延迟 */
+  }
+
   header {
     padding: 40px 20px 30px;
   }
