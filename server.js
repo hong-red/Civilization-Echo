@@ -1,12 +1,15 @@
-import 'dotenv/config';
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 import fetch from "node-fetch";
+import dotenv from "dotenv";
+
+// 初始化环境
+dotenv.config();
 
 /* ===== 基础 ===== */
-console.log("🚀 Server starting...");
+console.log("🚀 Server is initializing in", process.env.NODE_ENV, "mode");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
