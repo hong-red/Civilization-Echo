@@ -24,11 +24,8 @@ app.options('*', cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 /* ===== API Key ===== */
-const KIMI_API_KEY = process.env.KIMI_API_KEY;
-if (!KIMI_API_KEY) {
-  console.error("❌ 缺少 KIMI_API_KEY，请先配置 .env 文件");
-  process.exit(1);
-}
+let KIMI_API_KEY = process.env.KIMI_API_KEY;
+// 不需要直接退出进程，在API调用时检查
 
 /* ===== 根页面 ===== */
 app.get("/", (req, res) => {
@@ -63,6 +60,11 @@ ${poemText}
 `;
 
   try {
+    // 检查API Key是否存在
+    if (!KIMI_API_KEY) {
+      throw new Error("缺少KIMI_API_KEY环境变量");
+    }
+    
     const response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -81,7 +83,7 @@ ${poemText}
 
     const data = await response.json();
 
-    const story =
+    const story = 
       data.choices?.[0]?.message?.content ||
       "神兽今天有点害羞，一会再来讲。";
 
@@ -110,6 +112,11 @@ app.post("/api/sushi", async (req, res) => {
 `;
 
   try {
+    // 检查API Key是否存在
+    if (!KIMI_API_KEY) {
+      throw new Error("缺少KIMI_API_KEY环境变量");
+    }
+    
     const response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -127,7 +134,7 @@ app.post("/api/sushi", async (req, res) => {
     });
 
     const data = await response.json();
-    const answer =
+    const answer = 
       data.choices?.[0]?.message?.content ||
       "风雨太大，东坡暂未回应。";
 
@@ -169,6 +176,11 @@ app.post("/api/creation/continue", async (req, res) => {
 `;
 
   try {
+    // 检查API Key是否存在
+    if (!KIMI_API_KEY) {
+      throw new Error("缺少KIMI_API_KEY环境变量");
+    }
+    
     const response = await fetch("https://api.moonshot.cn/v1/chat/completions", {
       method: "POST",
       headers: {
