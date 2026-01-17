@@ -217,7 +217,13 @@ app.post("/api/creation/continue", async (req, res) => {
 
 /* ===== 启动 ===== */
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ 文明回响已启动：http://127.0.0.1:${PORT}`);
-  console.log(`✅ 服务器地址：http://0.0.0.0:${PORT}`);
-});
+
+// 仅在非 Vercel 环境下启动监听
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ 文明回响已启动：http://127.0.0.1:${PORT}`);
+  });
+}
+
+// 导出 app 供 Vercel 使用
+export default app;
