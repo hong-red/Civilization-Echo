@@ -154,8 +154,57 @@
       background: #eee;
     }
     /* 移动端适配 */
-    @media (max-width: 900px) {
-      main { grid-template-columns: 1fr; }
+    @media (max-width: 768px) {
+      header {
+        padding: 20px 15px;
+      }
+      header h1 {
+        font-size: 24px;
+      }
+      header p {
+        font-size: 14px;
+      }
+      main {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 15px;
+      }
+      section {
+        padding: 16px;
+      }
+      h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+      textarea {
+        font-size: 16px; /* 防止 iOS 自动缩放 */
+        height: 120px;
+      }
+      .answer {
+        font-size: 15px;
+        padding: 12px;
+      }
+      .poem {
+        font-size: 16px;
+        padding: 15px;
+        line-height: 1.8;
+      }
+      button {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        margin-top: 15px;
+      }
+      .back-btn {
+        width: 100%;
+        margin: 10px 0;
+        box-sizing: border-box;
+        text-align: center;
+      }
+      canvas {
+        max-width: 100% !important;
+        height: auto !important;
+      }
     }
   </style>
 </head>
