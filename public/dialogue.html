@@ -2,6 +2,11 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      window.location.href = 'm-dialogue.html';
+    }
+  </script>
   <title>时空对话 · 苏轼 - 文明回响</title>
   <!-- 引入 Chart.js 用于诗词可视化 -->
   <script src="https://lib.baomitu.com/Chart.js/3.9.1/chart.min.js"></script>
@@ -203,7 +208,7 @@
       }
       canvas {
         max-width: 100% !important;
-        height: auto !important;
+        height: 200px !important; /* 固定高度防止 Chart.js 缩放死循环 */
       }
     }
   </style>
