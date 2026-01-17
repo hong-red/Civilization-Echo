@@ -20,15 +20,10 @@
     }
   </script>
   <style>
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    touch-action: manipulation;
-  }
-  /* 全局基础样式 */
-  body {
-    font-family: "Noto Serif SC", "宋体", serif;
+    /* 全局基础样式 */
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", "宋体", serif;
       background: #f6f4f1;
       color: #222;
       min-height: 100vh;
@@ -291,7 +286,12 @@ async function askSuShi() {
   document.getElementById("question").value = "";
 
   try {
-    const res = await fetch("/api/sushi", {
+    // 智能 API 基础 URL：本地用 localhost，线上用 Vercel
+    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:3000"
+      : "https://civilization-echo.vercel.app";
+    
+    const res = await fetch(`${API_BASE_URL}/api/sushi`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question })

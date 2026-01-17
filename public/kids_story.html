@@ -26,14 +26,9 @@
   --accent: #4d6b57;
   --text: #2e3d33;
 }
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    touch-action: manipulation;
-  }
-  body {
-    font-family: "Noto Serif SC", "宋体", serif;
+body {
+  margin: 0;
+  font-family: "Noto Serif SC", "宋体", serif;
   background: linear-gradient(var(--bg1), var(--bg2));
   color: var(--text);
   min-height: 100vh;
@@ -247,7 +242,12 @@ async function generateStory() {
   const timeoutId = setTimeout(() => controller.abort(), 15000); // 15秒前端超时
 
   try {
-    const response = await fetch("/api/kids/story", {
+    // 智能 API 基础 URL：本地用 localhost，线上用 Vercel
+    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:3000"
+      : "https://civilization-echo.vercel.app";
+    
+    const response = await fetch(`${API_BASE_URL}/api/kids/story`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -126,27 +126,25 @@ async function continuePoem() {
   const result = document.getElementById("result");
   if (!firstLine) return;
 
-  const btn = document.querySelector('button');
-  btn.disabled = true;
-  btn.innerText = "古人提笔中...";
-  result.innerHTML = "<em>正在跨越时空续写...</em>";
+  result.innerHTML = "<em style='color:#666'>正在为你续写...</em>";
 
   try {
-    // 使用相对路径，自动适配环境
-    const API_URL = "/api/creation/continue";
+    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:3000"
+      : "https://civilization-echo.vercel.app";
     
-    const res = await fetch(API_URL, {
+    const res = await fetch(`${API_BASE_URL}/api/creation/continue`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstLine, mood })
     });
 
     const data = await res.json();
-    const continuation = data.continuation || "云深不知处...";
+    const continuation = data.continuation || "云深不知处，松风自吹寒。";
     
     result.innerHTML = `
-      <div class="user-line">你：${firstLine}</div>
-      <div class="ai-line" style="margin-top:10px">古人续：<br>${continuation.replace(/\n/g, "<br>")}</div>
+      <div class="user-line">${firstLine}</div>
+      <div class="ai-line">${continuation.replace(/\n/g, '<br>')}</div>
     `;
     
     document.getElementById("letter-btn").style.display = "block";
@@ -156,10 +154,7 @@ async function continuePoem() {
       author: '你与古人'
     };
   } catch (err) {
-    result.innerHTML = "<em>墨汁干了，请重试。</em>";
-  } finally {
-    btn.disabled = false;
-    btn.innerText = "AI 续写";
+    result.innerHTML = "<em style='color:#666'>请稍后再试</em>";
   }
 }
 

@@ -135,30 +135,25 @@ async function askSuShi() {
   const box = document.getElementById("answerBox");
   if (!question) return;
 
-  const btn = document.querySelector('button');
-    btn.disabled = true;
-    btn.innerText = "正在回信...";
-    box.innerHTML = "<em style='color:#999'>苏轼正在提笔为你回信……</em>";
+  box.innerHTML = "<em style='color:#999'>苏轼正在提笔为你回信……</em>";
+  
+  try {
+    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:3000"
+      : "https://civilization-echo.vercel.app";
     
-    try {
-      // 使用相对路径，自动适配环境
-      const API_URL = "/api/sushi";
-      
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question })
-      });
-      
-      const data = await res.json();
-      box.innerHTML = `<p>${(data.answer || "风雨太大，暂未收到回信").replace(/\n/g, "<br>")}</p>`;
-      document.getElementById("question").value = "";
-    } catch (err) {
-      box.innerHTML = "<em style='color:#999'>江上雾起，请稍后再试。</em>";
-    } finally {
-      btn.disabled = false;
-      btn.innerText = "发送问题";
-    }
+    const res = await fetch(`${API_BASE_URL}/api/sushi`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question })
+    });
+    
+    const data = await res.json();
+    box.innerHTML = `<p>${(data.answer || "风雨太大，暂未收到回信").replace(/\n/g, "<br>")}</p>`;
+    document.getElementById("question").value = "";
+  } catch (err) {
+    box.innerHTML = "<em style='color:#999'>江上雾起，请稍后再试。</em>";
+  }
 }
 </script>
 
