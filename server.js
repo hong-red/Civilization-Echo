@@ -11,16 +11,19 @@ const app = express();
 
 app.use(express.json());
 
-/* ===== 再 CORS（一定在路由前）===== */
-app.use(cors({
-  origin: '*', // 允许所有来源访问
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: false
-}));
+/* ===== 再 CORS（确保在所有逻辑之前）===== */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  
+  // 处理预检请求 (Preflight)
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
-// 处理 OPTIONS 请求
-app.options('*', cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 /* ===== API Key ===== */
