@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>神兽故事 (移动版)</title>
+  <link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #8d6e63; }
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", serif;
+      background: #fffaf0;
+      color: #333;
+      padding: 15px;
+    }
+    header { text-align: center; margin-bottom: 20px; }
+    header h1 { font-size: 20px; color: var(--accent); margin: 0; }
+    
+    .box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      line-height: 1.6;
+    }
+    
+    .poem-box { text-align: center; border-left: 4px solid var(--accent); }
+    .poem-title { font-weight: bold; font-size: 18px; margin-bottom: 10px; color: var(--accent); }
+    .poem-text { white-space: pre-line; font-size: 17px; color: #444; }
+    
+    .story-box { font-size: 16px; min-height: 100px; }
+    
+    .btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      background: var(--accent);
+      color: #fff;
+    }
+    
+    .back-btn { background: #95a5a6; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 id="pageTitle">神兽故事</h1>
+</header>
+
+<main>
+  <div class="box story-box" id="storyBox">
+    🌿 正在为你编织故事...
+  </div>
+
+  <div class="box poem-box">
+    <div class="poem-title" id="poemTitle"></div>
+    <div class="poem-text" id="poemText"></div>
+  </div>
+
+  <div class="btns">
+    <button onclick="playStory()">🔊 播放故事</button>
+    <button onclick="reloadStory()">🔄 换个故事</button>
+    <a href="m-kid.html" style="text-decoration:none;"><button class="back-btn">🏠 返回神兽园</button></a>
+  </div>
+</main>
+
+<script>
+const THEMES = {
+  青龙: "#2d6a4f",
+  白虎: "#495057",
+  朱雀: "#c53030",
+  玄武: "#2c5282"
+};
+
+function get(name) {
+  return new URLSearchParams(location.search).get(name) || "";
+}
+
+let utterance = null;
+let currentStory = "";
+
+async function generateStory() {
+  const beast = get("beast") || "青龙";
+  const title = get("title");
+  const poet = get("poet");
+  const text = get("text");
+
+  const accent = THEMES[beast] || "#8d6e63";
+  document.documentElement.style.setProperty("--accent", accent);
+  document.getElementById("pageTitle").innerText = `${beast}的故事`;
+  document.getElementById("poemTitle").innerText = `${title} · ${poet}`;
+  document.getElementById("poemText").innerText = text;
+
+  const storyBox = document.getElementById("storyBox");
+  storyBox.innerHTML = `<em>🌿 ${beast}正在编织故事...</em>`;
+
+  try {
+    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:3000"
+      : "https://civilization-echo.vercel.app";
+    
+    const res = await fetch(`${API_BASE_URL}/api/kids/story`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ beast, poemTitle: title, poet, poemText: text })
+    });
+
+    const data = await res.json();
+    currentStory = data.story || "神兽去休息了。";
+    storyBox.innerHTML = currentStory.replace(/\n/g, "<br>");
+    
+    utterance = new SpeechSynthesisUtterance(currentStory);
+    utterance.lang = "zh-CN";
+    utterance.rate = 0.9;
+  } catch (err) {
+    storyBox.innerHTML = "<em>暂时听不到神兽的声音...</em>";
+  }
+}
+
+function playStory() {
+  if (utterance) {
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function reloadStory() {
+  generateStory();
+}
+
+generateStory();
+</script>
+
+</body>
+</html>

@@ -2,6 +2,11 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<script>
+  if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    window.location.href = 'm-kid.html';
+  }
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- 引入思源宋体，使用国内镜像加速 -->
 <link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
