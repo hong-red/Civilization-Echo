@@ -190,9 +190,7 @@ footer {
   </div>
 
   <div class="button-group">
-    <button onclick="playStory()">🔊 播放故事</button>
-    <button onclick="pauseStory()">⏸ 暂停</button>
-    <button onclick="reloadStory()">🔄 再讲一遍（新故事）</button>
+    <button onclick="generateStory()">🔄 再讲一遍（新故事）</button>
     <button onclick="location.href='kid.html'">🏠 返回神兽园</button>
   </div>
 </main>
@@ -214,7 +212,6 @@ function get(name, fallback = "") {
   return v ? decodeURIComponent(v) : fallback;
 }
 
-let utterance = null;
 let currentStory = "";
 
 async function generateStory() {
@@ -269,10 +266,7 @@ async function generateStory() {
     storyBox.innerHTML = currentStory.replace(/\n/g, "<br>");
 
     // 准备语音合成
-    utterance = new SpeechSynthesisUtterance(currentStory);
-    utterance.lang = "zh-CN";
-    utterance.rate = 0.85;  // 稍慢，更温柔
-    utterance.pitch = 1.1;
+
 
   } catch (err) {
     clearTimeout(timeoutId);
@@ -286,19 +280,7 @@ async function generateStory() {
   }
 }
 
-function playStory() {
-  if (utterance && currentStory) {
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-  }
-}
-
-function pauseStory() {
-  window.speechSynthesis.cancel();
-}
-
-function reloadStory() {
-  generateStory();  // 重新调用 API，生成全新故事
+function generateStory() {  // 重新调用 API，生成全新故事
 }
 
 // 页面加载时生成故事

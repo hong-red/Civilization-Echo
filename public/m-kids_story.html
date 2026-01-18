@@ -68,8 +68,7 @@
   </div>
 
   <div class="btns">
-    <button onclick="playStory()">🔊 播放故事</button>
-    <button onclick="reloadStory()">🔄 换个故事</button>
+    <button onclick="generateStory()">🔄 换个故事</button>
     <a href="m-kid.html" style="text-decoration:none;"><button class="back-btn">🏠 返回神兽园</button></a>
   </div>
 </main>
@@ -86,7 +85,6 @@ function get(name) {
   return new URLSearchParams(location.search).get(name) || "";
 }
 
-let utterance = null;
 let currentStory = "";
 
 async function generateStory() {
@@ -119,24 +117,15 @@ async function generateStory() {
     currentStory = data.story || "神兽去休息了。";
     storyBox.innerHTML = currentStory.replace(/\n/g, "<br>");
     
-    utterance = new SpeechSynthesisUtterance(currentStory);
-    utterance.lang = "zh-CN";
-    utterance.rate = 0.9;
+
   } catch (err) {
     storyBox.innerHTML = "<em>暂时听不到神兽的声音...</em>";
   }
 }
 
-function playStory() {
-  if (utterance) {
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-  }
-}
 
-function reloadStory() {
-  generateStory();
-}
+
+
 
 generateStory();
 </script>
