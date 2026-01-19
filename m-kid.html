@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>神兽诗词园 (极简版)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #fff;
+      color: #333;
+      padding: 15px 10px;
+      touch-action: manipulation;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header h1 { font-size: 22px; margin: 0; color: #444; }
+    header p { font-size: 13px; color: #888; margin: 4px 0 0; }
+    
+    main {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px 5px;
+      text-align: center;
+      border: 1px solid #eee;
+    }
+    
+    .icon { font-size: 32px; margin-bottom: 5px; }
+    .card h2 { font-size: 15px; margin: 4px 0; color: #222; }
+    .card p { font-size: 11px; color: #999; margin: 0; }
+    
+    .footer-nav {
+      margin-top: 25px;
+      text-align: center;
+    }
+    
+    .back-btn {
+      display: inline-block;
+      padding: 10px 25px;
+      background: #666;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌸 神兽诗词园</h1>
+  <p>点击神兽，听听诗里的故事</p>
+</header>
+
+<main>
+  <div class="card" onclick="enterPoem('青龙')">
+    <div class="icon">🐉</div>
+    <h2>青龙 · 春天</h2>
+    <p>春风、花开、生长</p>
+    <span class="tag">希望</span>
+  </div>
+
+  <div class="card" onclick="enterPoem('白虎')">
+    <div class="icon">🐯</div>
+    <h2>白虎 · 勇敢</h2>
+    <p>山河、英雄、边塞</p>
+    <span class="tag">力量</span>
+  </div>
+
+  <div class="card" onclick="enterPoem('朱雀')">
+    <div class="icon">🐦</div>
+    <h2>朱雀 · 快乐</h2>
+    <p>夏天、采莲、热闹</p>
+    <span class="tag">热情</span>
+  </div>
+
+  <div class="card" onclick="enterPoem('玄武')">
+    <div class="icon">🐢</div>
+    <h2>玄武 · 思考</h2>
+    <p>夜晚、星空、思乡</p>
+    <span class="tag">智慧</span>
+  </div>
+</main>
+
+<div class="footer-nav">
+  <a href="index.html" class="back-btn">返回入口</a>
+</div>
+
+<script>
+function enterPoem(beast) {
+  const poems = {
+    青龙: { title: "春晓", poet: "孟浩然", text: "春眠不觉晓，处处闻啼鸟。\n夜来风雨声，花落知多少。" },
+    白虎: { title: "出塞", poet: "王昌龄", text: "秦时明月汉时关，万里长征人未还。\n但使龙城飞将在，不教胡马度阴山。" },
+    朱雀: { title: "江南", poet: "汉乐府", text: "江南可采莲，莲叶何田田。\n鱼戏莲叶间。\n鱼戏莲叶东，鱼戏莲叶西。\n鱼戏莲叶南，鱼戏莲叶北。" },
+    玄武: { title: "静夜思", poet: "李白", text: "床前明月光，疑是地上霜。\n举头望明月，低头思故乡。" }
+  };
+
+  const p = poems[beast];
+  // 移动端也跳转到轻量版的故事页面（稍后创建）
+  location.href = `m-kids_story.html?beast=${encodeURIComponent(beast)}&title=${encodeURIComponent(p.title)}&poet=${encodeURIComponent(p.poet)}&text=${encodeURIComponent(p.text)}`;
+}
+</script>
+
+</body>
+</html>
