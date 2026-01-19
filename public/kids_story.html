@@ -190,7 +190,9 @@ footer {
   </div>
 
   <div class="button-group">
-    <button onclick="generateStory()">🔄 再讲一遍（新故事）</button>
+    <button onclick="playStory()">🔊 播放故事</button>
+    <button onclick="pauseStory()">⏸ 暂停</button>
+    <button onclick="reloadStory()">🔄 再讲一遍（新故事）</button>
     <button onclick="location.href='kid.html'">🏠 返回神兽园</button>
   </div>
 </main>
@@ -212,6 +214,7 @@ function get(name, fallback = "") {
   return v ? decodeURIComponent(v) : fallback;
 }
 
+let utterance = null;
 let currentStory = "";
 
 async function generateStory() {
@@ -258,15 +261,20 @@ async function generateStory() {
 
     clearTimeout(timeoutId);
 
-    if (!response.ok) throw new Error("API 请求失败");
+    if (!response.ok) throw new Error("API 请求失败: " + response.status);
 
     const data = await response.json();
+    console.log('API 返回数据:', data); // 添加调试日志
     currentStory = data.story || "神兽走进云雾里了，一会儿再来吧。";
 
     storyBox.innerHTML = currentStory.replace(/\n/g, "<br>");
 
     // 准备语音合成
-
+    utterance = new SpeechSynthesisUtterance(currentStory);
+    utterance.lang = "zh-CN";
+    utterance.rate = 0.85;  // 稍慢，更温柔
+    utterance.pitch = 1.1;
+    console.log('语音合成对象已创建:', utterance); // 添加调试日志
 
   } catch (err) {
     clearTimeout(timeoutId);
@@ -280,7 +288,37 @@ async function generateStory() {
   }
 }
 
-function generateStory() {  // 重新调用 API，生成全新故事
+function playStory() {
+  if (!utterance || !currentStory) {
+    console.error('语音合成对象或故事内容不存在');
+    return;
+  }
+
+  // 检查语音合成是否可用
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+      console.log('开始播放语音');
+    } catch (error) {
+      console.error('播放语音时出错:', error);
+      alert('播放失败，请检查浏览器语音设置');
+    }
+  } else {
+    console.error('当前浏览器不支持语音合成 API');
+    alert('当前浏览器不支持语音合成功能');
+  }
+}
+
+function pauseStory() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    console.log('已暂停语音播放');
+  }
+}
+
+function reloadStory() {
+  generateStory();  // 重新调用 API，生成全新故事
 }
 
 // 页面加载时生成故事
