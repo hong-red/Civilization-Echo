@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<script>
+  if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    window.location.href = 'm-kid.html';
+  }
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
+<title>神兽诗词园 · 文明回响</title>
+<style>
+body {
+  margin: 0;
+  font-family: "Noto Serif SC", "宋体", serif;
+  background: linear-gradient(#fff8ec, #f2eadf);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+header {
+  text-align: center;
+  padding: 50px 20px 30px;
+}
+header h1 { font-size: 32px; margin-bottom: 10px; }
+header p { font-size: 15px; color: #666; }
+main {
+  max-width: 800px;
+  margin: 0 auto 40px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  flex: 1;
+}
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.18);
+}
+.icon { font-size: 56px; margin-bottom: 12px; }
+.card h2 { font-size: 21px; margin: 12px 0; }
+.card p { font-size: 14px; line-height: 1.7; color: #555; }
+.tag {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 20px;
+  background: #f0e6d8;
+  color: #6b4f2c;
+}
+footer {
+  text-align: center;
+  padding: 30px;
+  font-size: 13px;
+  color: #777;
+}
+.back-btn {
+  display: block;
+  margin: 30px auto;
+  padding: 12px 28px;
+  font-size: 16px;
+  background: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.back-btn:hover { background: #7f8c8d; }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  header {
+    padding: 30px 20px 20px;
+  }
+  
+  header h1 {
+    font-size: 28px;
+  }
+  
+  header p {
+    font-size: 14px;
+  }
+  
+  main {
+    padding: 15px;
+    gap: 15px;
+    grid-template-columns: repeat(2, 1fr); /* 保持 2x2，如果太挤再改 1fr */
+  }
+  
+  .card {
+    padding: 15px 10px;
+  }
+  
+  .icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+  
+  .card h2 {
+    font-size: 16px;
+    margin: 8px 0;
+  }
+  
+  .card p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  
+  .tag {
+    margin-top: 12px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  
+  .back-btn {
+    margin: 20px auto;
+    padding: 10px 24px;
+    font-size: 15px;
+    width: 90%;
+    max-width: 250px;
+  }
+  
+  footer {
+    padding: 20px;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌸 神兽诗词园</h1>
+  <p>点击神兽，一起走进诗里的世界</p>
+</header>
+
+<main>
+  <div class="card" onclick="enterPoem('青龙')">
+    <div class="icon">🐉</div>
+    <h2>青龙 · 春天的诗</h2>
+    <p>春风、花开、万物生长。<br>青龙带你读懂春天的诗句。</p>
+    <span class="tag">希望 · 生长</span>
+  </div>
+
+  <div class="card" onclick="enterPoem('白虎')">
+    <div class="icon">🐯</div>
+    <h2>白虎 · 勇敢的诗</h2>
+    <p>山河、边塞、英雄故事。<br>白虎教你什么是勇气。</p>
+    <span class="tag">力量 · 守护</span>
+  </div>
+
+  <div class="card" onclick="enterPoem('朱雀')">
+    <div class="icon">🐦</div>
+    <h2>朱雀 · 快乐的诗</h2>
+    <p>夏天、阳光、采莲歌声。<br>朱雀喜欢最热闹的诗。</p>
+    <span class="tag">热情 · 欢乐</span>
+  </div>
+
+  <div class="card" onclick="enterPoem('玄武')">
+    <div class="icon">🐢</div>
+    <h2>玄武 · 思考的诗</h2>
+    <p>夜晚、星空、思念故乡。<br>玄武陪你静静想一想。</p>
+    <span class="tag">智慧 · 宁静</span>
+  </div>
+</main>
+
+<button class="back-btn" onclick="location.href='index.html'">返回选择入口</button>
+
+<footer>
+  文明回响 · 童趣入口 ｜ 不背诗，也能爱上诗
+</footer>
+
+<script>
+function enterPoem(beast) {
+  const poems = {
+    青龙: { title: "春晓", poet: "孟浩然", text: "春眠不觉晓，处处闻啼鸟。\n夜来风雨声，花落知多少。" },
+    白虎: { title: "出塞", poet: "王昌龄", text: "秦时明月汉时关，万里长征人未还。\n但使龙城飞将在，不教胡马度阴山。" },
+    朱雀: { title: "江南", poet: "汉乐府", text: "江南可采莲，莲叶何田田。\n鱼戏莲叶间。\n鱼戏莲叶东，鱼戏莲叶西。\n鱼戏莲叶南，鱼戏莲叶北。" },
+    玄武: { title: "静夜思", poet: "李白", text: "床前明月光，疑是地上霜。\n举头望明月，低头思故乡。" }
+  };
+
+  const p = poems[beast];
+  location.href = `kids_story.html?beast=${encodeURIComponent(beast)}&title=${encodeURIComponent(p.title)}&poet=${encodeURIComponent(p.poet)}&text=${encodeURIComponent(p.text)}`;
+}
+</script>
+
+</body>
+</html>

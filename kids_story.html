@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<script>
+  if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    const params = window.location.search;
+    window.location.href = 'm-kids_story.html' + params;
+  }
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
+<title>神兽诗词故事 · 文明回响</title>
+<style>
+:root {
+  --bg1: #eaf7ef;
+  --bg2: #f6fff8;
+  --accent: #4d6b57;
+  --text: #2e3d33;
+}
+body {
+  margin: 0;
+  font-family: "Noto Serif SC", "宋体", serif;
+  background: linear-gradient(var(--bg1), var(--bg2));
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+header {
+  text-align: center;
+  padding: 40px 20px 20px;
+}
+header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+header p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--accent);
+}
+main {
+  max-width: 760px;
+  margin: auto;
+  padding: 20px;
+  flex: 1;
+}
+.box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  line-height: 1.8;
+}
+.box h3 {
+  margin-top: 0;
+  text-align: center;
+  color: var(--accent);
+  font-size: 20px;
+}
+.poem {
+  white-space: pre-line;
+  text-align: center;
+  font-size: 18px;
+  margin: 20px 0;
+  color: #444;
+}
+#storyBox {
+  font-size: 17px;
+  min-height: 180px;
+}
+.button-group {
+  text-align: center;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 400px;
+}
+.button-group button {
+  width: 100%;
+  margin: 0;
+  padding: 14px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.button-group button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+.button-group button:last-child {
+  background: #95a5a6;
+  margin-top: 8px;
+}
+footer {
+  text-align: center;
+  padding: 30px;
+  font-size: 13px;
+  color: #777;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  header {
+    padding: 30px 15px 15px;
+  }
+  
+  header h1 {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+  
+  header p {
+    font-size: 14px;
+  }
+  
+  main {
+    padding: 10px 15px;
+  }
+  
+  .box {
+    padding: 24px 20px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+  }
+  
+  .box h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  
+  .poem {
+    font-size: 17px;
+    margin: 12px 0;
+    line-height: 1.8;
+  }
+  
+  #storyBox {
+    font-size: 16px;
+    min-height: 140px;
+    line-height: 1.7;
+  }
+  
+  .button-group {
+    margin: 20px auto;
+    padding: 0 10px;
+    width: 100%;
+  }
+  
+  footer {
+    padding: 20px 15px;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="pageTitle">🐉 神兽的诗故事</h1>
+  <p id="pageSub">听神兽用温柔的声音讲给你听</p>
+</header>
+
+<main>
+  <div class="box" id="storyBox">
+    🌿 神兽正在轻轻翻开古老的书页……
+  </div>
+
+  <div class="box">
+    <h3 id="poemTitle">春晓 · 孟浩然</h3>
+    <div class="poem" id="poemText"></div>
+  </div>
+
+  <div class="button-group">
+    <button onclick="generateStory()">🔄 再讲一遍（新故事）</button>
+    <button onclick="location.href='kid.html'">🏠 返回神兽园</button>
+  </div>
+</main>
+
+<footer>
+  文明回响 · 每一次故事，都是独一无二的相遇
+</footer>
+
+<script>
+const THEMES = {
+  青龙: { bg1: "#f0f9f4", bg2: "#ffffff", accent: "#2d6a4f" },
+  白虎: { bg1: "#f8f9fa", bg2: "#ffffff", accent: "#495057" },
+  朱雀: { bg1: "#fff5f5", bg2: "#ffffff", accent: "#c53030" },
+  玄武: { bg1: "#f0f4f8", bg2: "#ffffff", accent: "#2c5282" }
+};
+
+function get(name, fallback = "") {
+  const v = new URLSearchParams(location.search).get(name);
+  return v ? decodeURIComponent(v) : fallback;
+}
+
+let currentStory = "";
+
+async function generateStory() {
+  const beast = get("beast", "青龙");
+  const title = get("title", "春晓");
+  const poet = get("poet", "孟浩然");
+  const text = get("text", "春眠不觉晓，处处闻啼鸟。\n夜来风雨声，花落知多少。");
+
+  // 应用主题
+  const theme = THEMES[beast] || THEMES["青龙"];
+  document.documentElement.style.setProperty("--bg1", theme.bg1);
+  document.documentElement.style.setProperty("--bg2", theme.bg2);
+  document.documentElement.style.setProperty("--accent", theme.accent);
+
+  // 更新页面标题和诗
+  document.getElementById("pageTitle").innerText = `${beast}的诗故事`;
+  document.getElementById("poemTitle").innerText = `${title} · ${poet}`;
+  document.getElementById("poemText").innerText = text;
+
+  const storyBox = document.getElementById("storyBox");
+  storyBox.innerHTML = `<em>🌿 ${beast}正在为你编织故事...<br>(AI 创作中，大约需要 10 秒)</em>`;
+
+  // 自动超时处理
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // 前端超时增加到 30 秒
+
+  try {
+    // 智能 API 基础 URL：本地用 localhost，线上用 Vercel
+    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:3000"
+      : "https://civilization-echo.vercel.app";
+    
+    const response = await fetch(`${API_BASE_URL}/api/kids/story`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        beast: beast,
+        poemTitle: title,
+        poet: poet,
+        poemText: text
+      }),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) throw new Error("API 请求失败");
+
+    const data = await response.json();
+    currentStory = data.story || "神兽走进云雾里了，一会儿再来吧。";
+
+    storyBox.innerHTML = currentStory.replace(/\n/g, "<br>");
+
+    // 准备语音合成
+
+
+  } catch (err) {
+    clearTimeout(timeoutId);
+    console.error(err);
+    storyBox.innerHTML = `
+      <em>🌫 云雾太重，${beast}的声音暂时传不过来...</em><br>
+      <button onclick="generateStory()" style="margin-top:15px; padding:8px 20px; background:#e67e22; color:white; border:none; border-radius:20px; cursor:pointer;">
+        再请神兽讲一遍
+      </button>
+    `;
+  }
+}
+
+function generateStory() {  // 重新调用 API，生成全新故事
+}
+
+// 页面加载时生成故事
+generateStory();
+</script>
+
+</body>
+</html>
