@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
+<title>记忆诗廊 · 文明回响</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Noto Serif SC", "宋体", serif;
+    background: linear-gradient(to bottom, #f5e8d8, #e8d9c8);
+    color: #3e2723;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    text-align: center;
+    padding: 50px 20px 30px;
+    background: rgba(255, 255, 255, 0.6);
+  }
+  header h1 {
+    font-size: 34px;
+    margin: 0 0 12px;
+    color: #4e342e;
+  }
+  header p {
+    font-size: 18px;
+    color: #6d4c41;
+    margin: 0;
+  }
+  main {
+    flex: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .intro {
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.9;
+    margin-bottom: 40px;
+    color: #5d4037;
+  }
+  .poem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+  }
+  .poem-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .poem-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+  }
+  .poem-title {
+    font-size: 22px;
+    margin: 0 0 16px;
+    color: #6d4c41;
+    text-align: center;
+  }
+  .poem-author {
+    text-align: center;
+    font-size: 16px;
+    color: #8d6e63;
+    margin-bottom: 20px;
+  }
+  .poem-text {
+    font-size: 18px;
+    line-height: 2.2;
+    white-space: pre-line;
+    color: #4e342e;
+  }
+  .actions {
+    text-align: center;
+    margin: 50px 0;
+  }
+  .actions button {
+    margin: 0 15px;
+    padding: 14px 32px;
+    font-size: 18px;
+    background: #8d6e63;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .actions button:hover {
+    background: #6d4c41;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  .actions button:nth-child(2) {
+    background: #a1887f;
+  }
+  .actions button:nth-child(2):hover {
+    background: #8d6e63;
+  }
+  footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 14px;
+    color: #8d6e63;
+  }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    body {
+      background: #f5e8d8; /* 移动端使用纯色 */
+      font-family: -apple-system, sans-serif;
+    }
+    
+    header {
+      padding: 30px 15px 20px;
+      background: #fff;
+    }
+    
+    header h1 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+    
+    header p {
+      font-size: 15px;
+    }
+    
+    main {
+      padding: 10px 15px;
+    }
+    
+    .intro {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+      padding: 0 10px;
+    }
+    
+    .poem-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    
+    .poem-card {
+      background: #fff;
+      padding: 24px 20px;
+      border-radius: 12px;
+      box-shadow: none;
+      border: 1px solid #ddd;
+      transform: none !important;
+      transition: none !important;
+    }
+    
+    .poem-card:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    
+    .poem-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    
+    .poem-author {
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+    
+    .poem-text {
+      font-size: 16px;
+      line-height: 1.9;
+      text-align: center;
+    }
+    
+    .actions {
+      margin: 30px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 10px;
+    }
+    
+    .actions button {
+      margin: 0;
+      padding: 14px 24px;
+      font-size: 16px;
+      width: 100%;
+      border-radius: 12px;
+    }
+    
+    footer {
+      padding: 30px 15px;
+      font-size: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🕯 记忆诗廊</h1>
+  <p>那些年，我们一起背过的诗</p>
+</header>
+
+<main>
+  <div class="intro">
+    时光慢下来，<br>
+    让熟悉的诗句重新在心底响起。<br>
+    这里没有考试，只有回忆与安宁。
+  </div>
+
+  <div class="poem-grid">
+    <div class="poem-card">
+      <h2 class="poem-title">静夜思</h2>
+      <p class="poem-author">李白</p>
+      <div class="poem-text">
+床前明月光，疑是地上霜。
+举头望明月，低头思故乡。</div>
+    </div>
+
+    <div class="poem-card">
+      <h2 class="poem-title">春晓</h2>
+      <p class="poem-author">孟浩然</p>
+      <div class="poem-text">
+春眠不觉晓，处处闻啼鸟。
+夜来风雨声，花落知多少。</div>
+    </div>
+
+    <div class="poem-card">
+      <h2 class="poem-title">登鹳雀楼</h2>
+      <p class="poem-author">王之涣</p>
+      <div class="poem-text">
+白日依山尽，黄河入海流。
+欲穷千里目，更上一层楼。</div>
+    </div>
+
+    <div class="poem-card">
+      <h2 class="poem-title">枫桥夜泊</h2>
+      <p class="poem-author">张继</p>
+      <div class="poem-text">
+月落乌啼霜满天，江枫渔火对愁眠。
+姑苏城外寒山寺，夜半钟声到客船。</div>
+    </div>
+
+    <div class="poem-card">
+      <h2 class="poem-title">相思</h2>
+      <p class="poem-author">王维</p>
+      <div class="poem-text">
+红豆生南国，春来发几枝。
+愿君多采撷，此物最相思。</div>
+    </div>
+
+    <div class="poem-card">
+      <h2 class="poem-title">九月九日忆山东兄弟</h2>
+      <p class="poem-author">王维</p>
+      <div class="poem-text">
+独在异乡为异客，每逢佳节倍思亲。
+遥知兄弟登高处，遍插茱萸少一人。</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button onclick="location.href='index.html'">返回选择入口</button>
+    <button onclick="openPoemLetter()">📜 手抄诗笺</button>
+    <button onclick="location.href='calligraphy.html'">✒️ 进入诗画共创</button>
+  </div>
+</main>
+
+<footer>
+  文明回响 · 在安静中，与旧时光重逢
+</footer>
+
+<script>
+// 加载本地保存的数据
+let customPoems = JSON.parse(localStorage.getItem("customPoems") || "{}");
+let savedName = localStorage.getItem("copyistName") || "";
+
+function openPoemLetter() {
+  const defaultPoems = ["静夜思", "春晓", "登鹳雀楼", "枫桥夜泊", "相思", "九月九日忆山东兄弟"];
+  const customTitles = Object.keys(customPoems);
+  const allTitles = [...defaultPoems, ...customTitles];
+
+  const options = allTitles.map(title => 
+    `<option value="${title}">${title}${customTitles.includes(title) ? "（自定义）" : ""}</option>`
+  ).join("");
+
+  const modalHTML = `
+    <div id="poemModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000;">
+      <div style="background:#fffef7;border-radius:20px;padding:40px;width:90%;max-width:500px;box-shadow:0 15px 40px rgba(0,0,0,0.3);">
+        <h3 style="text-align:center;margin:0 0 30px;color:#5d4037;font-size:26px;">手抄诗笺</h3>
+
+        <label style="display:block;margin-bottom:10px;color:#6d4c41;font-size:16px;">选择诗歌：</label>
+        <select id="poemSelect" style="width:100%;padding:14px;font-size:18px;border-radius:12px;border:1px solid #d7ccc8;margin-bottom:20px;">
+          ${options}
+          <option value="__add_new__">＋ 添加新诗</option>
+        </select>
+
+        <label style="display:block;margin-bottom:10px;color:#6d4c41;font-size:16px;">抄书人（可选，下次自动记住）：</label>
+        <input type="text" id="copyistInput" value="${savedName}" placeholder="例如：张爷爷 / 小明" 
+               style="width:100%;padding:14px;font-size:18px;border-radius:12px;border:1px solid #d7ccc8;margin-bottom:30px;">
+
+        <div style="text-align:center;">
+          <button onclick="generateSelected()" style="padding:12px 36px;font-size:18px;background:#8d6e63;color:white;border:none;border-radius:50px;cursor:pointer;">
+            生成诗笺
+          </button>
+          <button onclick="document.getElementById('poemModal').remove()" style="margin-left:20px;padding:12px 36px;font-size:18px;background:#a1887f;color:white;border:none;border-radius:50px;cursor:pointer;">
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function generateSelected() {
+  const select = document.getElementById("poemSelect");
+  const selected = select.value;
+  const nameInput = document.getElementById("copyistInput").value.trim();
+
+  if (nameInput) {
+    localStorage.setItem("copyistName", nameInput);
+  }
+
+  document.getElementById("poemModal").remove();
+
+  if (selected === "__add_new__") {
+    addNewPoem(nameInput);
+  } else {
+    window.location.href = `poem-letter.html?poem=${encodeURIComponent(selected)}`;
+  }
+}
+
+function addNewPoem(preName) {
+  const addHTML = `
+    <div id="addModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1001;">
+      <div style="background:#fffef7;border-radius:20px;padding:40px;width:90%;max-width:500px;box-shadow:0 15px 40px rgba(0,0,0,0.3);">
+        <h3 style="text-align:center;margin:0 0 30px;color:#5d4037;font-size:26px;">添加新诗</h3>
+
+        <label style="display:block;margin-bottom:10px;color:#6d4c41;">诗名：</label>
+        <input type="text" id="newTitle" placeholder="例如：赠汪伦" style="width:100%;padding:14px;font-size:18px;border-radius:12px;border:1px solid #d7ccc8;margin-bottom:20px;">
+
+        <label style="display:block;margin-bottom:10px;color:#6d4c41;">作者：</label>
+        <input type="text" id="newAuthor" value="${preName || ''}" placeholder="例如：李白" style="width:100%;padding:14px;font-size:18px;border-radius:12px;border:1px solid #d7ccc8;margin-bottom:20px;">
+
+        <label style="display:block;margin-bottom:10px;color:#6d4c41;">正文（支持换行）：</label>
+        <textarea id="newText" rows="6" placeholder="桃花潭水深千尺，&#10;不及汪伦送我情。" style="width:100%;padding:14px;font-size:18px;border-radius:12px;border:1px solid #d7ccc8;margin-bottom:30px;resize:vertical;"></textarea>
+
+        <div style="text-align:center;">
+          <button onclick="saveNewPoem()" style="padding:12px 36px;font-size:18px;background:#8d6e63;color:white;border:none;border-radius:50px;cursor:pointer;">
+            保存并生成
+          </button>
+          <button onclick="document.getElementById('addModal').remove()" style="margin-left:20px;padding:12px 36px;font-size:18px;background:#a1887f;color:white;border:none;border-radius:50px;cursor:pointer;">
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', addHTML);
+}
+
+function saveNewPoem() {
+  const title = document.getElementById("newTitle").value.trim();
+  const author = document.getElementById("newAuthor").value.trim();
+  const text = document.getElementById("newText").value.trim();
+
+  if (!title || !text) {
+    alert("诗名和正文不能为空哦～");
+    return;
+  }
+
+  customPoems[title] = { text: text, author: author || "佚名" };
+  localStorage.setItem("customPoems", JSON.stringify(customPoems));
+
+  document.getElementById("addModal").remove();
+
+  const url = `poem-letter.html?custom=1&title=${encodeURIComponent(title)}&text=${encodeURIComponent(text.replace(/\n/g, '\\n'))}&author=${encodeURIComponent(author)}`;
+  window.location.href = url;
+}
+</script>
+
+</body>
+</html>

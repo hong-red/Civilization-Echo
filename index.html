@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>文明回响 · 时空诗旅</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // 只有非移动端才加载外部字体，减少移动端负担
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+  }
+  body {
+    font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+    background: linear-gradient(to bottom, #f8f5f0, #e8e2d8);
+    color: #333;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* 主内容 */
+  header {
+    text-align: center;
+    padding: 80px 20px 40px;
+  }
+  header h1 {
+    font-size: 40px;
+    margin-bottom: 16px;
+    color: #3e2723;
+  }
+  header p {
+    font-size: 18px;
+    color: #6d4c41;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  .card h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #5d4037;
+  }
+  .card p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #6d4c41;
+    margin-bottom: 24px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 8px 20px;
+    background: #d7ccc8;
+    color: #5d4037;
+    border-radius: 30px;
+    font-size: 14px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 14px;
+    color: #8d6e63;
+    background: rgba(255,255,255,0.6);
+  }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    body {
+      background: #f8f5f0;
+      font-family: -apple-system, sans-serif;
+    }
+    header {
+      padding: 40px 15px 20px;
+    }
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    main {
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .card {
+      padding: 30px 20px;
+      box-shadow: none;
+      border: 1px solid #eee;
+      transform: none !important;
+      transition: none !important;
+    }
+    .card:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    footer {
+      padding: 20px;
+      background: #fff;
+    }
+  }
+  </style>
+  <script>
+    // 预检测移动端，优化跳转路径
+    var isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+    function navigate(desktopUrl, mobileUrl) {
+      window.location.href = isMobile ? mobileUrl : desktopUrl;
+    }
+  </script>
+</head>
+<body>
+
+<header>
+  <h1>文明回响 · 时空诗旅</h1>
+  <p>请选择你的旅程入口，与千年前的思想相遇</p>
+</header>
+
+<main>
+  <div class="card" onclick="navigate('kid.html', 'm-kid.html')">
+    <h2>🌱 童趣诗词园</h2>
+    <p>和神兽一起认识诗人，用故事、动画与节气，感受诗词的温度。</p>
+    <span class="tag">3–12 岁</span>
+  </div>
+
+  <div class="card" onclick="navigate('dialogue.html', 'm-dialogue.html')">
+    <h2>📜 时空对话 · 苏轼</h2>
+    <p>与真实人格构建的苏轼对话，解构诗词，理解情绪，进入诗人的精神世界。</p>
+    <span class="tag">13–35 岁 · 核心体验</span>
+  </div>
+
+  <div class="card" onclick="navigate('creation.html', 'm-creation.html')">
+    <h2>🖋️ 诗词混创工坊</h2>
+    <p>基于大语言模型的诗词续写与共创，让古老的文字在现代语境下重生。</p>
+    <span class="tag">创作 · 深度交互</span>
+  </div>
+
+  <div class="card" onclick="navigate('elder-home.html', 'elder-home.html')">
+    <h2>🎨 记忆诗廊</h2>
+    <p>为长者设计的沉浸式诗词临摹与信笺制作，留住文明的温度。</p>
+    <span class="tag">长者 · 经典传承</span>
+  </div>
+</main>
+
+<footer>
+  文明回响 · 一个让文明重新与人对话的数字入口
+</footer>
+
+</body>
+</html>
