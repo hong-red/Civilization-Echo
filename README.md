@@ -9,12 +9,20 @@ Civilization-Echo/
 ├── public/              # 前端静态文件
 │   ├── index.html      # 主页
 │   ├── kid.html        # 儿童版
+│   ├── m-kid.html      # 儿童版移动端
+│   ├── kids_story.html # 神兽诗故事
+│   ├── m-kids_story.html # 神兽诗故事移动端
 │   ├── youth-home.html # 青少年版
-│   ├── elder-home.html # 老年版
+│   ├── m-creation.html # 创作工坊移动端
 │   ├── creation.html   # 创作工坊
+│   ├── elder-home.html # 老年版
+│   ├── m-dialogue.html # 时空对话移动端
 │   ├── dialogue.html   # 时空对话
+│   ├── poem-letter.html # 诗词信笺
+│   ├── calligraphy.html # 书法展示
 │   ├── script.js       # 前端脚本
-│   └── style.css       # 样式文件
+│   ├── style.css       # 样式文件
+│   └── .nojekyll       # GitHub Pages配置
 ├── server.js           # Express后端
 ├── package.json        # 项目配置
 ├── .env                # 环境变量
@@ -29,12 +37,20 @@ Civilization-Echo/
 
 ### 🧒 儿童板块
 - **神兽诗故事**：AI生成传统神兽与诗词结合的儿童故事
+  - 支持四大神兽主题（青龙、白虎、朱雀、玄武）
+  - 自动适配移动端
+  - 语音播放功能
 
 ### 🧑 青少年板块
 - **诗词混创工坊**：AI协助续写诗词
+  - 支持多种情绪类型（孤独/漂泊/喜悦/思念/自由）
+  - 移动端适配
+- **诗词信笺**：创意诗词展示
+- **书法展示**：传统书法作品浏览
 
 ### 👴 老年板块
 - **时空对话**：与古代文人（苏轼）进行AI对话
+  - 移动端适配
 
 ## 技术栈
 
