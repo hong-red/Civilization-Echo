@@ -129,9 +129,7 @@ async function continuePoem() {
   result.innerHTML = "<em style='color:#666'>正在为你续写...</em>";
 
   try {
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
+    const API_BASE_URL = "";
     
     const res = await fetch(`${API_BASE_URL}/api/creation/continue`, {
       method: "POST",

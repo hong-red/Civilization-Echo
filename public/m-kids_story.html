@@ -103,9 +103,7 @@ async function generateStory() {
   storyBox.innerHTML = `<em>🌿 ${beast}正在编织故事...</em>`;
 
   try {
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
+    const API_BASE_URL = "";
     
     const res = await fetch(`${API_BASE_URL}/api/kids/story`, {
       method: "POST",

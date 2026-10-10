@@ -211,6 +211,7 @@
     <h2>为你匹配的诗词</h2>
     <div class="matched-poem" id="poemText"></div>
     <p class="poem-author" id="poemAuthor"></p>
+    <p id="matchReason" style="font-size:15px; color:#8d6e63; margin:6px 0 0; white-space:pre-line;"></p>
     <div>
       <button onclick="generateAgain()">🔀 再试一次</button>
       <button class="reset-btn" onclick="resetAll()">🗑️ 重新开始</button>
@@ -233,18 +234,31 @@
 </footer>
 
 <script>
-// 简单模拟 AI 匹配诗词（真实项目可接入视觉模型 + Kimi，这里用预设库模拟效果）
-const poemDatabase = [
-  { text: "竹外桃花三两枝，春江水暖鸭先知。\n蒌蒿满地芦芽短，正是河豚欲上时。", author: "苏轼 · 《惠崇春江晚景》" },
-  { text: "回首向来萧瑟处，归去，也无风雨也无晴。", author: "苏轼 · 《定风波》" },
-  { text: "大江东去，浪淘尽，千古风流人物。", author: "苏轼 · 《念奴娇·赤壁怀古》" },
-  { text: "明月几时有？把酒问青天。\n不知天上宫阙，今夕是何年。", author: "苏轼 · 《水调歌头》" },
-  { text: "床前明月光，疑是地上霜。\n举头望明月，低头思故乡。", author: "李白 · 《静夜思》" },
-  { text: "海内存知己，天涯若比邻。", author: "王勃 · 《送杜少府之任蜀州》" },
-  { text: "野径云俱黑，江船火独明。\n晓看红湿处，花重锦官城。", author: "杜甫 · 《春夜喜雨》" },
-  { text: "停车坐爱枫林晚，霜叶红于二月花。", author: "杜甫 · 《山行》" },
-  { text: "独在异乡为异客，每逢佳节倍思亲。\n遥知兄弟登高处，遍插茱萸少一人。", author: "王维 · 《九月九日忆山东兄弟》" }
-];
+// 前后端同源部署：API 与页面同域，走相对路径
+const API_BASE_URL = "";
+
+// 压缩图片到最大 1024px，避免 base64 过大、超出后端/模型限制
+function resizeImage(dataUrl, maxDim = 1024, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      const scale = Math.min(1, maxDim / Math.max(width, height));
+      width = Math.round(width * scale);
+      height = Math.round(height * scale);
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
 
 let currentImage = null;
 
@@ -288,27 +302,54 @@ function handleFile(file) {
   }
 
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     preview.src = e.target.result;
     preview.style.display = 'block';
     uploadBox.style.display = 'none';
     reuploadBtn.style.display = 'inline-block';
-    currentImage = e.target.result;
 
-    // 模拟 AI 分析并匹配诗词
-    setTimeout(() => {
-      matchPoem();
-    }, 1500);
+    try {
+      currentImage = await resizeImage(e.target.result);
+    } catch {
+      currentImage = e.target.result; // 压缩失败则用原图
+    }
+    matchPoem();
   };
   reader.readAsDataURL(file);
 }
 
-function matchPoem() {
-  const randomPoem = poemDatabase[Math.floor(Math.random() * poemDatabase.length)];
-  poemText.textContent = randomPoem.text;
-  poemAuthor.textContent = randomPoem.author;
+async function matchPoem() {
+  if (!currentImage) return;
+
+  const reasonEl = document.getElementById('matchReason');
+  poemText.textContent = 'AI 正在端详你的笔墨……';
+  poemAuthor.textContent = '';
+  if (reasonEl) reasonEl.textContent = '';
   resultBox.style.display = 'block';
   resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/calligraphy/match`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: currentImage })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `请求失败（${res.status}）`);
+
+    poemText.textContent = data.poem || '未能匹配，请重试。';
+    poemAuthor.textContent = data.author || '';
+    if (reasonEl) {
+      const parts = [];
+      if (data.reason) parts.push('推荐理由：' + data.reason);
+      if (data.description) parts.push('AI 观察：' + data.description);
+      reasonEl.textContent = parts.join('\n');
+    }
+  } catch (err) {
+    poemText.textContent = '出错了，请稍后再试。';
+    poemAuthor.textContent = '';
+    console.error(err);
+  }
 }
 
 function generateAgain() {

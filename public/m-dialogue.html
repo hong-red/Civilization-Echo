@@ -138,9 +138,7 @@ async function askSuShi() {
   box.innerHTML = "<em style='color:#999'>苏轼正在提笔为你回信……</em>";
   
   try {
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
+    const API_BASE_URL = "";
     
     const res = await fetch(`${API_BASE_URL}/api/sushi`, {
       method: "POST",
