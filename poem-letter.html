@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // 只有非移动端才加载外部字体
+    if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap';
+      document.head.appendChild(link);
+    }
+  </script>
+<title>电子手抄诗笺 · 文明回响</title>
+<script src="https://lib.baomitu.com/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  body {
+    margin: 0;
+    background: #f9f5f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    font-family: "Noto Serif SC", "KaiTi", "楷体", serif;
+  }
+  .paper {
+    width: 100%;
+    max-width: 700px;
+    background: #fffef7;
+    border: 1px solid #e8d8c8;
+    border-radius: 16px;
+    padding: 100px 70px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+    position: relative;
+    overflow: hidden;
+  }
+  .paper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f0e6d8 10px, #f0e6d8 11px),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M0,100 Q50,60 100,100 T200,100 M100,0 Q60,50 100,100 T100,200" stroke="%23e8d8c8" stroke-width="1" fill="none"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .title {
+    text-align: center;
+    font-size: 38px;
+    color: #5d4037;
+    margin-bottom: 80px;
+    letter-spacing: 12px;
+    font-weight: normal;
+  }
+  .poem {
+    font-size: 34px;
+    line-height: 2.8;
+    text-align: center;
+    color: #3e2723;
+    margin: 100px 0;
+    white-space: pre-line;
+  }
+  .author {
+    text-align: center;
+    font-size: 26px;
+    color: #8d6e63;
+    margin-top: 80px;
+  }
+  .signature {
+    text-align: right;
+    margin-top: 140px;
+    font-size: 22px;
+    color: #a1887f;
+    border-top: 1px solid #e8d8c8;
+    padding-top: 30px;
+    width: 70%;
+    margin-left: auto;
+  }
+  .actions {
+    text-align: center;
+    margin: 50px 0;
+  }
+  button {
+    padding: 16px 40px;
+    font-size: 20px;
+    background: #8d6e63;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    margin: 0 15px;
+    transition: all 0.3s;
+  }
+  button:hover {
+    background: #6d4c41;
+    transform: translateY(-4px);
+  }
+  .save-btn {
+    background: #e74c3c;
+  }
+  .save-btn:hover {
+    background: #c0392b;
+  }
+  .tip {
+    text-align: center;
+    font-size: 16px;
+    color: #a1887f;
+    margin-top: 30px;
+    line-height: 1.8;
+  }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    body {
+      padding: 15px 10px;
+      background: #f9f5f0;
+      font-family: -apple-system, sans-serif;
+    }
+    .paper {
+      padding: 40px 20px;
+      border-radius: 12px;
+      box-shadow: none;
+      border: 1px solid #e8d8c8;
+    }
+    .paper::before {
+      display: none; /* 移动端禁用复杂背景 */
+    }
+    .title {
+      font-size: 24px;
+      margin-bottom: 30px;
+      letter-spacing: 4px;
+    }
+    .poem {
+      font-size: 20px;
+      line-height: 1.8;
+      margin: 40px 0;
+    }
+    .author {
+      font-size: 18px;
+      margin-top: 30px;
+    }
+    .signature {
+      margin-top: 60px;
+      font-size: 16px;
+      width: 100%;
+    }
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      margin: 0;
+      padding: 14px;
+      font-size: 18px;
+      border-radius: 8px;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="paper" id="capture">
+  <h1 class="title" id="pageTitle">手抄诗笺</h1>
+  <div class="poem" id="poemText"></div>
+  <p class="author" id="poemAuthor"></p>
+  <div class="signature" id="signatureLine">
+    抄于 二〇二五年十二月　　抄书人：<span id="copyistName">________________</span>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="save-btn" onclick="saveAsImage()">📥 保存为图片</button>
+  <button onclick="location.href='elder-home.html'">← 返回诗廊</button>
+</div>
+
+<p class="tip">
+  💡 长按图片或右键保存 · 可发微信、朋友圈、存相册
+</p>
+
+<script>
+// 默认经典诗库
+const defaultPoems = {
+  "静夜思": { text: "床前明月光，疑是地上霜。\n举头望明月，低头思故乡。", author: "李白" },
+  "春晓": { text: "春眠不觉晓，处处闻啼鸟。\n夜来风雨声，花落知多少。", author: "孟浩然" },
+  "登鹳雀楼": { text: "白日依山尽，黄河入海流。\n欲穷千里目，更上一层楼。", author: "王之涣" },
+  "枫桥夜泊": { text: "月落乌啼霜满天，江枫渔火对愁眠。\n姑苏城外寒山寺，夜半钟声到客船。", author: "张继" },
+  "相思": { text: "红豆生南国，春来发几枝。\n愿君多采撷，此物最相思。", author: "王维" },
+  "九月九日忆山东兄弟": { text: "独在异乡为异客，每逢佳节倍思亲。\n遥知兄弟登高处，遍插茱萸少一人。", author: "王维" }
+};
+
+// 加载自定义诗歌和抄书人姓名
+let customPoems = JSON.parse(localStorage.getItem("customPoems") || "{}");
+let copyistName = localStorage.getItem("copyistName") || "";
+
+const allPoems = { ...defaultPoems, ...customPoems };
+
+// URL 参数解析
+const urlParams = new URLSearchParams(location.search);
+let selectedTitle = urlParams.get("poem") || urlParams.get("title") || "静夜思";
+let isCustom = urlParams.get("custom") === "1";
+let poem = {}; // 在外部声明 poem 变量
+
+const storedPoem = sessionStorage.getItem('currentPoem');
+
+if (storedPoem) {
+  const { title, text, author } = JSON.parse(storedPoem);
+  selectedTitle = title;
+  poem = { text, author };
+  sessionStorage.removeItem('currentPoem'); // 清理
+} else if (isCustom) {
+  const customText = urlParams.get("text") || "";
+  const customAuthor = urlParams.get("author") || "佚名";
+  poem = { text: customText, author: customAuthor };
+} else {
+  poem = allPoems[selectedTitle] || defaultPoems["静夜思"];
+}
+
+// 渲染
+document.getElementById("pageTitle").textContent = selectedTitle;
+document.getElementById("poemText").textContent = poem.text;
+document.getElementById("poemAuthor").textContent = `—— ${poem.author} ——`;
+document.getElementById("copyistName").textContent = copyistName || "________________";
+
+// 保存为图片
+async function saveAsImage() {
+  const element = document.getElementById("capture");
+  const button = document.querySelector(".save-btn");
+  button.textContent = "生成中…";
+
+  try {
+    const canvas = await html2canvas(element, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: "#fffef7"
+    });
+
+    const link = document.createElement("a");
+    link.download = `${selectedTitle} - 手抄诗笺 - 文明回响.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+
+    button.textContent = "📥 保存成功！";
+    setTimeout(() => button.textContent = "📥 保存为图片", 2000);
+  } catch (err) {
+    alert("生成失败，请刷新重试");
+    button.textContent = "📥 保存为图片";
+  }
+}
+</script>
+
+</body>
+</html>
