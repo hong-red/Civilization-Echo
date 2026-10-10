@@ -76,7 +76,7 @@ npm install
 npm start
 ```
 
-访问 `http://localhost:3000`。
+访问 `http://localhost:7777`。
 
 ## API 端点
 
@@ -143,8 +143,8 @@ DEEPSEEK_API_KEY=your_api_key_here
 # Kimi 视觉模型 API Key（书法/绘画识图）
 KIMI_API_KEY=your_api_key_here
 
-# 服务端口（可选，默认 3000）
-PORT=3000
+# 服务端口（可选，默认 7777）
+PORT=7777
 ```
 
 ## 开发指南

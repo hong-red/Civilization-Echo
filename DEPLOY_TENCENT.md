@@ -1,7 +1,7 @@
 # 腾讯云部署指南（前后端同源）
 
 目标：整站（前端 `public/` + 后端 `/api`）都跑在腾讯云 `81.70.191.44`，浏览器访问
-`http://81.70.191.44:3000` 即可使用，无需 Vercel / GitHub Pages。
+`http://81.70.191.44:7777` 即可使用，无需 Vercel / GitHub Pages。
 
 前端已改为同源调用（`API_BASE_URL = ""`，即 `/api/...`），后端 `node server.js` 会
 同时托管静态页面和 API 接口，因此不存在跨域和混合内容问题。
@@ -51,7 +51,7 @@ npm install
 cat > .env <<'EOF'
 DEEPSEEK_API_KEY=你的DeepSeek_API_Key
 KIMI_API_KEY=你的Kimi_API_Key
-PORT=3000
+PORT=7777
 EOF
 ```
 
@@ -68,24 +68,24 @@ pm2 status
 
 ## 六、开放防火墙 / 安全组端口
 
-腾讯云控制台 → 该实例 → 防火墙（或安全组）→ 放行 TCP `3000`（若走 80 则放行 80）。
+腾讯云控制台 → 该实例 → 防火墙（或安全组）→ 放行 TCP `7777`（若走 80 则放行 80）。
 
 ## 七、验证
 
 ```bash
 # 服务器本机自测
-curl http://127.0.0.1:3000/api/health
+curl http://127.0.0.1:7777/api/health
 # 预期返回 {"status":"ok","env":"local","hasKey":true,...}
 ```
 
-浏览器打开 `http://81.70.191.44:3000/dialogue.html`，试一下「与苏轼对话」是否正常出内容。
+浏览器打开 `http://81.70.191.44:7777/dialogue.html`，试一下「与苏轼对话」是否正常出内容。
 
-## （可选）用 80 端口访问，省掉 :3000
+## （可选）用 80 端口访问，省掉 :7777
 
 二选一：
 
 1. **Node 直接监听 80**：`.env` 里 `PORT=80`，用 root 运行（80 是特权端口，需 `sudo pm2 start ...`）。
-2. **nginx 反向代理 80 → 3000**（更规范）：
+2. **nginx 反向代理 80 → 7777**（更规范）：
 
 ```bash
 sudo apt-get install -y nginx
@@ -94,7 +94,7 @@ server {
     listen 80;
     server_name _;
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:7777;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }
