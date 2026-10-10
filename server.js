@@ -228,7 +228,7 @@ app.post("/api/calligraphy/match", async (req, res) => {
 
 /* ===== 启动逻辑 ===== */
 if (!process.env.VERCEL) {
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 7777;
   app.listen(PORT, () => {
     console.log(`✅ 本地服务已启动：http://localhost:${PORT}`);
   });
