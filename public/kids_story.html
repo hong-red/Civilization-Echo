@@ -242,10 +242,8 @@ async function generateStory() {
   const timeoutId = setTimeout(() => controller.abort(), 30000); // 前端超时增加到 30 秒
 
   try {
-    // 智能 API 基础 URL：本地用 localhost，线上用 Vercel
-    const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://civilization-echo.vercel.app";
+    // 前后端同源部署：API 与页面同域，走相对路径即可
+    const API_BASE_URL = "";
     
     const response = await fetch(`${API_BASE_URL}/api/kids/story`, {
       method: "POST",
