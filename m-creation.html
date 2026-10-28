@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>诗词混创 (移动版)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #121212;
+      color: #eee;
+      padding: 20px 15px;
+      touch-action: manipulation;
+    }
+    h1 { font-size: 24px; color: #f1c40f; text-align: center; margin-bottom: 10px; }
+    p { font-size: 14px; text-align: center; color: #888; margin-bottom: 25px; }
+    
+    .input-box {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    
+    textarea {
+      width: 100%;
+      height: 90px;
+      background: transparent;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      padding: 12px;
+      font-size: 17px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    select {
+      width: 100%;
+      padding: 14px;
+      background: #2c2c2c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    
+    button {
+      width: 100%;
+      padding: 16px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+    }
+    
+    .result {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      min-height: 100px;
+      text-align: center;
+      line-height: 1.8;
+      font-size: 18px;
+    }
+    
+    .user-line { color: #f1c40f; }
+    .ai-line { color: #87CEEB; }
+    
+    .actions { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .actions a, .actions button#letter-btn {
+      text-align: center;
+      padding: 12px;
+      background: #333;
+      color: #ccc;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 15px;
+      border: none;
+    }
+    #letter-btn { background: #d35400; color: #fff; display: none; }
+  </style>
+</head>
+<body>
+
+<h1>🖋️ 诗词混创</h1>
+<p>你起一句，我续三句</p>
+
+<div class="input-box">
+  <textarea id="firstLine" placeholder="输入第一句诗..."></textarea>
+  <div class="controls">
+    <select id="mood">
+      <option value="自由">自由挥洒</option>
+      <option value="孤独">淡淡孤独</option>
+      <option value="漂泊">漂泊苍凉</option>
+      <option value="喜悦">明快喜悦</option>
+      <option value="思念">柔软相思</option>
+    </select>
+    <button onclick="continuePoem()">AI 续写</button>
+  </div>
+</div>
+
+<div class="result" id="result">
+  <em style="color:#666">等待你的开头...</em>
+</div>
+
+<div class="actions">
+  <button id="letter-btn" onclick="generateLetter()">📜 生成手抄诗笺</button>
+  <a href="index.html">返回入口</a>
+</div>
+
+<script>
+async function continuePoem() {
+  const firstLine = document.getElementById("firstLine").value.trim();
+  const mood = document.getElementById("mood").value;
+  const result = document.getElementById("result");
+  if (!firstLine) return;
+
+  result.innerHTML = "<em style='color:#666'>正在为你续写...</em>";
+
+  try {
+    const API_BASE_URL = "";
+    
+    const res = await fetch(`${API_BASE_URL}/api/creation/continue`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstLine, mood })
+    });
+
+    const data = await res.json();
+    const continuation = data.continuation || "云深不知处，松风自吹寒。";
+    
+    result.innerHTML = `
+      <div class="user-line">${firstLine}</div>
+      <div class="ai-line">${continuation.replace(/\n/g, '<br>')}</div>
+    `;
+    
+    document.getElementById("letter-btn").style.display = "block";
+    window.currentPoem = {
+      title: firstLine.substring(0, 10),
+      text: firstLine + '\n' + continuation,
+      author: '你与古人'
+    };
+  } catch (err) {
+    result.innerHTML = "<em style='color:#666'>请稍后再试</em>";
+  }
+}
+
+function generateLetter() {
+  if (window.currentPoem) {
+    sessionStorage.setItem('currentPoem', JSON.stringify(window.currentPoem));
+    window.location.href = 'poem-letter.html';
+  }
+}
+</script>
+
+</body>
+</html>

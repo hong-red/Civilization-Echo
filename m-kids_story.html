@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>神兽故事 (极简版)</title>
+  <style>
+    :root { --accent: #666; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fff;
+      color: #333;
+      padding: 10px;
+      touch-action: manipulation;
+    }
+    header { text-align: center; margin-bottom: 15px; }
+    header h1 { font-size: 18px; color: #444; margin: 0; }
+    
+    .box {
+      background: #fdfdfd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 12px;
+      border: 1px solid #eee;
+      line-height: 1.5;
+    }
+    
+    .poem-box { text-align: center; border-left: 3px solid var(--accent); }
+    .poem-title { font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #222; }
+    .poem-text { white-space: pre-line; font-size: 16px; color: #444; }
+    
+    .story-box { font-size: 15px; min-height: 80px; background: #f9f9f9; }
+    
+    .btns {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #444;
+      color: #fff;
+    }
+    
+    .back-btn { background: #888; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 id="pageTitle">神兽故事</h1>
+</header>
+
+<main>
+  <div class="box story-box" id="storyBox">
+    🌿 正在为你编织故事...
+  </div>
+
+  <div class="box poem-box">
+    <div class="poem-title" id="poemTitle"></div>
+    <div class="poem-text" id="poemText"></div>
+  </div>
+
+  <div class="btns">
+    <button onclick="generateStory()">🔄 换个故事</button>
+    <a href="m-kid.html" style="text-decoration:none;"><button class="back-btn">🏠 返回神兽园</button></a>
+  </div>
+</main>
+
+<script>
+const THEMES = {
+  青龙: "#2d6a4f",
+  白虎: "#495057",
+  朱雀: "#c53030",
+  玄武: "#2c5282"
+};
+
+function get(name) {
+  return new URLSearchParams(location.search).get(name) || "";
+}
+
+let currentStory = "";
+
+async function generateStory() {
+  const beast = get("beast") || "青龙";
+  const title = get("title");
+  const poet = get("poet");
+  const text = get("text");
+
+  const accent = THEMES[beast] || "#8d6e63";
+  document.documentElement.style.setProperty("--accent", accent);
+  document.getElementById("pageTitle").innerText = `${beast}的故事`;
+  document.getElementById("poemTitle").innerText = `${title} · ${poet}`;
+  document.getElementById("poemText").innerText = text;
+
+  const storyBox = document.getElementById("storyBox");
+  storyBox.innerHTML = `<em>🌿 ${beast}正在编织故事...</em>`;
+
+  try {
+    const API_BASE_URL = "";
+    
+    const res = await fetch(`${API_BASE_URL}/api/kids/story`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ beast, poemTitle: title, poet, poemText: text })
+    });
+
+    const data = await res.json();
+    currentStory = data.story || "神兽去休息了。";
+    storyBox.innerHTML = currentStory.replace(/\n/g, "<br>");
+    
+
+  } catch (err) {
+    storyBox.innerHTML = "<em>暂时听不到神兽的声音...</em>";
+  }
+}
+
+
+
+
+
+generateStory();
+</script>
+
+</body>
+</html>
